@@ -1,17 +1,20 @@
 import { useState } from 'react';
-import { StyledCards, StyledTextarea } from './styled';
+import { StyledCards, StyledTextarea, StyledButton } from './styled';
+import CardsContent from '../CardsContent/CardsContent';
 
 interface PropsType {
   cardTitle: string;
   isEditMode: boolean;
+  deleteCard: (id: string) => void;
+  id: string;
 }
 
 const Cards = (props: PropsType) => {
-  const { cardTitle, isEditMode } = props;
+  const { cardTitle, isEditMode, deleteCard, id } = props;
 
   const [editMode, setEditMode] = useState(isEditMode);
   const [cardTitleValue, setcardTitleValue] = useState(cardTitle);
-  const [commentsCount, setCommentsCount] = useState(1);
+  const [commentsCount, setCommentsCount] = useState(0);
 
   const deactivateEditMode = () => {
     setEditMode(false);
@@ -33,11 +36,13 @@ const Cards = (props: PropsType) => {
           autoFocus
         />
       ) : (
-        <StyledCards onClick={activateEditMode}>
+        <StyledCards onDoubleClick={activateEditMode}>
           {cardTitleValue}
+          <StyledButton onClick={() => deleteCard(id)}>&#215;</StyledButton>
           {!!commentsCount && <div>{commentsCount} comments</div>}
         </StyledCards>
       )}
+      <CardsContent />
     </>
   );
 };

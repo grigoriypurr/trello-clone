@@ -31,9 +31,11 @@ const List = (props: PropsType) => {
     }
     setEditMode(false);
   };
+
   const onInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.currentTarget.value);
   };
+
   const addCard = () => {
     const newCards = [
       ...cards,
@@ -41,12 +43,20 @@ const List = (props: PropsType) => {
     ];
     setCards(newCards as CardsType[]);
   };
+  const deleteCard = (id: string) => {
+    const newCards = cards.filter((item) => {
+      return item.id !== id;
+    });
+    setCards(newCards);
+  };
 
   const MappedCards = cards.map((item) => (
     <Cards
       key={item.id}
       cardTitle={item.cardTitle}
       isEditMode={item.isEditMode}
+      deleteCard={() => deleteCard(item.id)}
+      id={item.id}
     />
   ));
 

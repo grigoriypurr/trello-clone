@@ -1,0 +1,18 @@
+import Popup from 'reactjs-popup';
+import styled from 'styled-components';
+
+export const StyledPopup = styled(Popup)`
+  &-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity linear 0.15s;
+    z-index: 2000;
+  }
+`;
