@@ -31,16 +31,12 @@ const initialLists = [
   },
 ];
 
-const Tables = () => {
-  const [lists, setLists] = useState<ListType[]>(initialLists);
-  // const [value, setValue] = useState([...lists.map((item) => item.inputValue)]);
-  // console.log(value);
-  // const add = (values: string) => {
-  //   setValue(value.map((item, idx) => (item[idx] !== item[1] ? item : values)));
-  //   setLists(lists.map((item) => item));
+interface PropsType {
+  loginName: string;
+}
 
-  //   console.log(value);
-  // };
+const Tables = (props: PropsType) => {
+  const [lists, setLists] = useState<ListType[]>(initialLists);
 
   const deleteList = (id: string) => {
     console.log(id);
@@ -72,7 +68,7 @@ const Tables = () => {
             inputValue={item.inputValue}
             editMode={item.isEditMode}
             id={item.id}
-            // add={add}
+            loginName={props.loginName}
           />
         ))}
         <StyledButton>

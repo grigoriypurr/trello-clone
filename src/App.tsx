@@ -1,7 +1,8 @@
 import Header from './components/Header/Header';
-import './App.css';
+import Login from './components/Login/Login';
 import Tables from './components/Tables';
 import styled from 'styled-components';
+import { useState } from 'react';
 
 const StyledApp = styled.div`
   display: flex;
@@ -10,10 +11,17 @@ const StyledApp = styled.div`
 `;
 
 const App = () => {
+  const [loginName, setLoginName] = useState('Grin');
+
+  const onInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setLoginName(e.currentTarget.value);
+  };
+
   return (
     <StyledApp>
+      <Login onInputChange={(e) => onInputChange(e)} loginName={loginName} />
       <Header />
-      <Tables />
+      <Tables loginName={loginName} />
     </StyledApp>
   );
 };

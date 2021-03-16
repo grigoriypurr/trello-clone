@@ -7,7 +7,7 @@ interface PropsType {
   deleteList: (id: string) => void;
   id: string;
   inputValue: string;
-  // add: any;
+  loginName: string;
   editMode: boolean;
 }
 interface CardsType {
@@ -17,7 +17,8 @@ interface CardsType {
 }
 
 const List = (props: PropsType) => {
-  const { deleteList, inputValue, editMode, id } = props;
+  const { deleteList, inputValue, editMode, id, loginName } = props;
+
   const [isEditMode, setEditMode] = useState(editMode);
   const [value, setValue] = useState(inputValue);
   const [cards, setCards] = useState<CardsType[]>([]);
@@ -57,6 +58,8 @@ const List = (props: PropsType) => {
       isEditMode={item.isEditMode}
       deleteCard={() => deleteCard(item.id)}
       id={item.id}
+      loginName={loginName}
+      listTitle={value}
     />
   ));
 
