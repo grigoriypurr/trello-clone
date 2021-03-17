@@ -23,12 +23,23 @@ const Cards = (props: PropsType) => {
   const [cardTitleValue, setcardTitleValue] = useState(cardTitle);
   //sprosit pro object passing
   const [commentsAmount, setCommentsAmount] = useState<CommentsType[]>([]);
+  const [commentValue, setCommentValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
   const closeModal = () => setIsOpen(false);
 
   const deactivateEditMode = () => {
     setEditMode(false);
+  };
+  const updateCommentInState = (id: string, value: string) => {
+    const updatedComments = commentsAmount.map((item) => {
+      if (item.id === id) {
+        return { id: id, commentValue: value };
+      } else {
+        return item;
+      }
+    });
+    setCommentsAmount(updatedComments);
   };
 
   const activateEditMode = () => {
@@ -39,9 +50,26 @@ const Cards = (props: PropsType) => {
   ) => {
     setcardTitleValue(e.currentTarget.value);
   };
+
+  const onCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setCommentValue(e.currentTarget.value);
+    console.log(commentValue);
+  };
+
   const addComment = () => {
-    const newComments = [...commentsAmount, { id: uuidv1(), commentValue: '' }];
+    if (!commentValue) return;
+    const newComments = [
+      ...commentsAmount,
+      { id: uuidv1(), commentValue: commentValue },
+    ];
     setCommentsAmount(newComments as CommentsType[]);
+  };
+  const deleteComment = (id: string) => {
+    const newComments = commentsAmount.filter((item) => {
+      return item.id !== id;
+    });
+
+    setCommentsAmount(newComments);
   };
 
   return (
@@ -75,7 +103,11 @@ const Cards = (props: PropsType) => {
         onTextareaChange={(event) => onTextareaChange(event)}
         deleteCard={() => deleteCard(id)}
         addComment={addComment}
+        onCommentChange={(event) => onCommentChange(event)}
         id={id}
+        commentValue={commentValue}
+        deleteComment={deleteComment}
+        updateCommentInState={updateCommentInState}
       />
     </>
   );

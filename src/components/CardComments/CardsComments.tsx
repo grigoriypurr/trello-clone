@@ -1,35 +1,72 @@
 import { Input, StyledComment, StyledButton } from './styled';
 import { CommentsType } from '../Cards/Cards';
 import { useState } from 'react';
+import Comment from '../Comment/Comment';
 
 interface PropsType {
-  commentsAmount: CommentsType[] | null;
+  commentsAmount: CommentsType[];
   addComment: () => void;
   loginName: string;
+  onCommentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  commentValue: string;
+  deleteComment: (id: string) => void;
+  updateCommentInState: (id: string, value: string) => void;
 }
 
 const CardsComments = (props: PropsType) => {
-  const { commentsAmount, addComment, loginName } = props;
+  const {
+    commentsAmount,
+    addComment,
+    loginName,
+    onCommentChange,
+    commentValue,
+    deleteComment,
+    updateCommentInState,
+  } = props;
 
-  const [editMode, setEditMode] = useState(false);
-
-  const toggleEditMode = (editMode: boolean) => {
-    editMode ? setEditMode(false) : setEditMode(true);
+  const [newCommenteditMode, setEditMode] = useState(false);
+  const [inputValue, setInputvalue] = useState('');
+  const activateEditMode = () => {
+    setEditMode(true);
   };
-  console.log(commentsAmount);
+
+  const handleClick = () => {
+    setEditMode(false);
+    addComment();
+    setInputvalue('');
+  };
+  const onInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputvalue(event.currentTarget.value);
+    onCommentChange(event);
+  };
+
   return (
     <div>
       <h4>Activity</h4>
       <StyledComment>
         <Input
           placeholder="Write a comment..."
-          onFocus={() => toggleEditMode(editMode)}
+          onClick={activateEditMode}
+          value={inputValue}
+          onChange={onInputChange}
+          autoFocus
         />
-        {editMode && <StyledButton onClick={addComment}>Save</StyledButton>}
+        {newCommenteditMode && (
+          <StyledButton onClick={handleClick}>Save</StyledButton>
+        )}
       </StyledComment>
-
+      {commentsAmount.map((item) => (
+        <Comment
+          key={item.id}
+          loginName={loginName}
+          commentValue={item.commentValue}
+          deleteComment={deleteComment}
+          commentId={item.id}
+          onCommentChange={(e) => onCommentChange(e)}
+          updateCommentInState={updateCommentInState}
+        />
+      ))}
       <div> </div>
-      <div> {loginName}</div>
     </div>
   );
 };

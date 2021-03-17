@@ -8,7 +8,7 @@ interface PropsType {
 
 const Login = (props: PropsType) => {
   const { onInputChange, loginName } = props;
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const closeModal = () => setOpen(false);
 
   return (

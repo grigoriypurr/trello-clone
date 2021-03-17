@@ -17,13 +17,17 @@ interface PropType {
   open: boolean;
   closeModal: () => void;
   cardTitleValue: string;
-  commentsAmount: CommentsType[] | null;
+  commentsAmount: CommentsType[];
   loginName: string;
   listTitle: string;
   deleteCard: (id: string) => void;
   id: string;
   onTextareaChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   addComment: () => void;
+  onCommentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  commentValue: string;
+  deleteComment: (id: string) => void;
+  updateCommentInState: (id: string, value: string) => void;
 }
 
 const CardsContent = (props: PropType) => {
@@ -38,12 +42,16 @@ const CardsContent = (props: PropType) => {
     deleteCard,
     onTextareaChange,
     addComment,
+    onCommentChange,
+    commentValue,
+    deleteComment,
+    updateCommentInState,
   } = props;
 
   const [cardsTitleEditMode, setCardsTitleEditMode] = useState(false);
   const [descriptionEditMode, setDescriptionEditMode] = useState(false);
-  // const [CardsTitleEditMode, setCardsTitleEditMode] = useState(false);
   const [descriptionValue, setDescriptionValue] = useState('');
+  // const [CardsTitleEditMode, setCardsTitleEditMode] = useState(false);
 
   const toggleEditMode = (
     editMode: boolean,
@@ -91,7 +99,7 @@ const CardsContent = (props: PropType) => {
             <h4>Description:</h4>
             {(descriptionValue || descriptionEditMode) && (
               <StyledButton
-                margin="10px"
+                marginTop="10px"
                 alignSelf="center"
                 onClick={() =>
                   toggleEditMode(descriptionEditMode, setDescriptionEditMode)
@@ -136,10 +144,15 @@ const CardsContent = (props: PropType) => {
           commentsAmount={commentsAmount}
           addComment={addComment}
           loginName={loginName}
+          onCommentChange={(e) => onCommentChange(e)}
+          commentValue={commentValue}
+          deleteComment={deleteComment}
+          updateCommentInState={updateCommentInState}
         />
         <StyledButton
           type="button"
           alignSelf="flex-start"
+          marginTop="10px"
           onClick={() => deleteCard(id)}
         >
           Delete Card

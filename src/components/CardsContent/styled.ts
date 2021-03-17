@@ -43,7 +43,8 @@ export const StyledCloseButton = styled.button`
 `;
 
 export const StyledButton = styled.button`
-  margin: ${(props: { margin?: string; alignSelf?: string }) => props.margin};
+  margin-top: ${(props: { marginTop?: string; alignSelf?: string }) =>
+    props.marginTop};
 
   align-self: ${(props: { alignSelf?: string; margin?: string }) =>
     props.alignSelf};
