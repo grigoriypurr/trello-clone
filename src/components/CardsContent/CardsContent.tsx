@@ -12,6 +12,7 @@ import {
 } from './styled';
 import { CommentsType } from '../Cards/Cards';
 import CardsComments from '../CardComments/CardsComments';
+import { useStateWithLocalStorage } from '../../App';
 
 interface PropsType {
   open: boolean;
@@ -22,12 +23,13 @@ interface PropsType {
   listTitle: string;
   deleteCard: (id: string) => void;
   id: string;
-  onTextareaChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   addComment: () => void;
   onCommentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   commentValue: string;
   deleteComment: (id: string) => void;
   updateCommentInState: (id: string, value: string) => void;
+  updateCardNameInState: (id: string, value: string) => void;
+  setcardTitleValue: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const CardsContent = (props: PropsType) => {
@@ -40,17 +42,24 @@ const CardsContent = (props: PropsType) => {
     listTitle,
     id,
     deleteCard,
-    onTextareaChange,
     addComment,
     onCommentChange,
-    commentValue,
     deleteComment,
     updateCommentInState,
+    updateCardNameInState,
+    setcardTitleValue,
   } = props;
 
   const [cardsTitleEditMode, setCardsTitleEditMode] = useState(false);
+  const [modalCardTitleValue, setModalCardTitleValue] = useState(
+    cardTitleValue
+  );
+
   const [descriptionEditMode, setDescriptionEditMode] = useState(false);
-  const [descriptionValue, setDescriptionValue] = useState('');
+  const [descriptionValue, setDescriptionValue] = useStateWithLocalStorage(
+    '',
+    'description' + id
+  );
 
   const toggleEditMode = (
     editMode: boolean,
@@ -58,9 +67,19 @@ const CardsContent = (props: PropsType) => {
   ) => {
     editMode ? stateSetter(false) : stateSetter(true);
   };
-
+  const onTextareaChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    setModalCardTitleValue(e.currentTarget.value);
+  };
   const onDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescriptionValue(e.currentTarget.value);
+  };
+
+  const handleInputOnBlur = (id: string, cardTitleValue: string) => {
+    updateCardNameInState(id, cardTitleValue);
+    setcardTitleValue(cardTitleValue);
+    toggleEditMode(cardsTitleEditMode, setCardsTitleEditMode);
   };
 
   return (
@@ -74,11 +93,9 @@ const CardsContent = (props: PropsType) => {
         <StyledCloseButton onClick={closeModal}>&times;</StyledCloseButton>
         {cardsTitleEditMode ? (
           <Input
-            value={cardTitleValue}
+            value={modalCardTitleValue}
             onChange={(event) => onTextareaChange(event)}
-            onBlur={() =>
-              toggleEditMode(cardsTitleEditMode, setCardsTitleEditMode)
-            }
+            onBlur={() => handleInputOnBlur(id, modalCardTitleValue)}
             autoFocus
           />
         ) : (
@@ -87,7 +104,7 @@ const CardsContent = (props: PropsType) => {
               toggleEditMode(cardsTitleEditMode, setCardsTitleEditMode)
             }
           >
-            <h4>{cardTitleValue}</h4>
+            <h4>{modalCardTitleValue}</h4>
             <StyledSpan>
               in list{' '}
               <StyledSpanWithUnderline> {listTitle}</StyledSpanWithUnderline>

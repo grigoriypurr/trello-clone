@@ -95,7 +95,7 @@ const Cards = (props: PropsType) => {
         />
       ) : (
         <StyledCards
-          onDoubleClick={activateEditMode}
+          // onDoubleClick={activateEditMode}
           onClick={() => setIsOpen((o) => !o)}
         >
           {cardTitleValue}
@@ -112,7 +112,6 @@ const Cards = (props: PropsType) => {
         commentsAmount={commentsAmount}
         loginName={loginName}
         listTitle={listTitle}
-        onTextareaChange={(event) => onTextareaChange(event)}
         deleteCard={() => deleteCard(id)}
         addComment={addComment}
         onCommentChange={(event) => onCommentChange(event)}
@@ -120,6 +119,8 @@ const Cards = (props: PropsType) => {
         commentValue={commentValue}
         deleteComment={deleteComment}
         updateCommentInState={updateCommentInState}
+        updateCardNameInState={updateCardNameInState}
+        setcardTitleValue={setcardTitleValue}
       />
     </>
   );
