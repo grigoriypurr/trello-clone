@@ -1,6 +1,6 @@
 import Header from './components/Header/Header';
 import Login from './components/Login/Login';
-import Tables from './components/Tables';
+import Board from './components/Tables';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 
@@ -10,28 +10,26 @@ const StyledApp = styled.div`
   height: 100vh;
 `;
 
-const App = () => {
-  function useStickyState(defaultValue: any, key: string) {
-    const [value, setValue] = useState(() => {
-      const stickyValue = window.localStorage.getItem(key);
-      return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue;
-    });
-    useEffect(() => {
-      window.localStorage.setItem(key, JSON.stringify(value));
-    }, [key, value]);
-    return [value, setValue];
-  }
-  const [loginName, setLoginName] = useStickyState('', 'login');
+export function useStateWithLocalStorage(defaultValue: any, key: string) {
+  const [value, setValue] = useState(() => {
+    const stickyValue = window.localStorage.getItem(key);
+    return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue;
+  });
+  useEffect(() => {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  }, [key, value]);
 
-  const onInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setLoginName(e.currentTarget.value);
-  };
+  return [value, setValue];
+}
+
+const App = () => {
+  const [loginName, setLoginName] = useStateWithLocalStorage('', 'loginName');
 
   return (
     <StyledApp>
-      <Login onInputChange={(e) => onInputChange(e)} loginName={loginName} />
+      <Login setLoginName={setLoginName} />
       <Header />
-      <Tables loginName={loginName} />
+      <Board loginName={loginName} />
     </StyledApp>
   );
 };

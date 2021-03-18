@@ -16,7 +16,7 @@ const Comment = (props: PropsType) => {
     commentValue,
     deleteComment,
     commentId,
-    onCommentChange,
+
     updateCommentInState,
   } = props;
 

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import List from './List';
 import { StyledTables, Flexbox, StyledButton } from './styled';
 import { v1 as uuidv1 } from 'uuid';
+import { useStateWithLocalStorage } from '../../App';
 
 interface ListType {
   id: string;
@@ -10,22 +11,22 @@ interface ListType {
 }
 const initialLists = [
   {
-    id: '0',
+    id: uuidv1(),
     inputValue: 'TODO',
     isEditMode: false,
   },
   {
-    id: '1',
+    id: uuidv1(),
     inputValue: 'In Progress',
     isEditMode: false,
   },
   {
-    id: '2',
+    id: uuidv1(),
     inputValue: 'Testing',
     isEditMode: false,
   },
   {
-    id: '3',
+    id: uuidv1(),
     inputValue: 'Done',
     isEditMode: false,
   },
@@ -35,16 +36,28 @@ interface PropsType {
   loginName: string;
 }
 
-const Tables = (props: PropsType) => {
-  const [lists, setLists] = useState<ListType[]>(initialLists);
+const Board = (props: PropsType) => {
+  const [lists, setLists] = useStateWithLocalStorage(
+    initialLists,
+    'initialLists'
+  );
+
+  const updateListNameInState = (id: string, value: string) => {
+    const updatedLists = lists.map((item: ListType) => {
+      if (item.id === id) {
+        return { ...item, inputValue: value, isEditMode: false };
+      } else {
+        return item;
+      }
+    });
+    setLists(updatedLists);
+  };
 
   const deleteList = (id: string) => {
-    console.log(id);
-    console.log(lists[1].id);
-    const newList = lists.filter((item) => {
+    const newList = lists.filter((item: ListType) => {
       return item.id !== id;
     });
-    console.log(newList);
+
     setLists(newList);
   };
 
@@ -55,14 +68,13 @@ const Tables = (props: PropsType) => {
       { id: uuidv1(), inputValue: '', isEditMode: true },
     ];
     setLists(newLists as ListType[]);
-    console.log(lists);
   };
-  console.log(lists);
   return (
     <StyledTables>
       <Flexbox>
-        {lists.map((item, idx) => (
+        {lists.map((item: ListType) => (
           <List
+            updateListNameInState={updateListNameInState}
             key={item.id}
             deleteList={() => deleteList(item.id)}
             inputValue={item.inputValue}
@@ -79,4 +91,4 @@ const Tables = (props: PropsType) => {
   );
 };
 
-export default Tables;
+export default Board;

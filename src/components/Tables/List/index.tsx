@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { StyledList, Flexbox, Input, StyledListTitle } from './styled';
 import { v1 as uuidv1 } from 'uuid';
 import Cards from '../../Cards/Cards';
+import { useStateWithLocalStorage } from '../../../App';
 
 interface PropsType {
   deleteList: (id: string) => void;
@@ -9,6 +10,7 @@ interface PropsType {
   inputValue: string;
   loginName: string;
   editMode: boolean;
+  updateListNameInState: (id: string, value: string) => void;
 }
 interface CardsType {
   id: string;
@@ -17,11 +19,20 @@ interface CardsType {
 }
 
 const List = (props: PropsType) => {
-  const { deleteList, inputValue, editMode, id, loginName } = props;
+  const {
+    deleteList,
+    inputValue,
+    editMode,
+    id,
+    loginName,
+    updateListNameInState,
+  } = props;
+
+  const iss = uuidv1();
 
   const [isEditMode, setEditMode] = useState(editMode);
   const [value, setValue] = useState(inputValue);
-  const [cards, setCards] = useState<CardsType[]>([]);
+  const [cards, setCards] = useStateWithLocalStorage([], 'cards' + inputValue);
 
   const inputActivateEditMode = () => {
     setEditMode(true);
@@ -30,6 +41,7 @@ const List = (props: PropsType) => {
     if (!value) {
       deleteList(id);
     }
+    updateListNameInState(id, value);
     setEditMode(false);
   };
 
@@ -45,23 +57,23 @@ const List = (props: PropsType) => {
     setCards(newCards as CardsType[]);
   };
   const deleteCard = (id: string) => {
-    const newCards = cards.filter((item) => {
+    const newCards = cards.filter((item: CardsType) => {
       return item.id !== id;
     });
     setCards(newCards);
   };
-
-  const MappedCards = cards.map((item) => (
-    <Cards
-      key={item.id}
-      cardTitle={item.cardTitle}
-      isEditMode={item.isEditMode}
-      deleteCard={() => deleteCard(item.id)}
-      id={item.id}
-      loginName={loginName}
-      listTitle={value}
-    />
-  ));
+  const updateCardNameInState = (id: string, value: string) => {
+    const updatedCards = cards.map((item: CardsType) => {
+      if (item.id === id) {
+        return { ...item, cardTitle: value, isEditMode: false };
+      } else {
+        return item;
+      }
+    });
+    setCards(updatedCards);
+  };
+  console.log(cards);
+  // console.log(JSON.parse(window.localStorage.iss));
 
   return (
     <StyledList>
@@ -77,7 +89,18 @@ const List = (props: PropsType) => {
           onBlur={inputDeactivateEditMode}
         />
       )}
-      {MappedCards}
+      {cards.map((item: CardsType) => (
+        <Cards
+          key={item.id}
+          cardTitle={item.cardTitle}
+          isEditMode={item.isEditMode}
+          deleteCard={() => deleteCard(item.id)}
+          id={item.id}
+          loginName={loginName}
+          listTitle={value}
+          updateCardNameInState={updateCardNameInState}
+        />
+      ))}
       <Flexbox justifyContent="space-between">
         <button onClick={addCard}>Add Card</button>
         <div onClick={() => deleteList(id)}>&#215;</div>

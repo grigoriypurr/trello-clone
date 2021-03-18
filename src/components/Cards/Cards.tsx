@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { StyledCards, StyledTextarea, StyledButton } from './styled';
 import CardsContent from '../CardsContent/CardsContent';
 import { v1 as uuidv1 } from 'uuid';
+import { useStateWithLocalStorage } from '../../App';
 
 interface PropsType {
   cardTitle: string;
@@ -10,6 +11,7 @@ interface PropsType {
   id: string;
   loginName: string;
   listTitle: string;
+  updateCardNameInState: (id: string, value: string) => void;
 }
 export interface CommentsType {
   id: string;
@@ -17,22 +19,33 @@ export interface CommentsType {
 }
 
 const Cards = (props: PropsType) => {
-  const { cardTitle, isEditMode, deleteCard, id, loginName, listTitle } = props;
+  const {
+    cardTitle,
+    isEditMode,
+    deleteCard,
+    id,
+    loginName,
+    listTitle,
+    updateCardNameInState,
+  } = props;
 
   const [editMode, setEditMode] = useState(isEditMode);
   const [cardTitleValue, setcardTitleValue] = useState(cardTitle);
-  //sprosit pro object passing
-  const [commentsAmount, setCommentsAmount] = useState<CommentsType[]>([]);
+  const [commentsAmount, setCommentsAmount] = useStateWithLocalStorage(
+    [],
+    'commentsAmount' + cardTitle
+  );
   const [commentValue, setCommentValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
   const closeModal = () => setIsOpen(false);
 
   const deactivateEditMode = () => {
+    updateCardNameInState(id, cardTitleValue);
     setEditMode(false);
   };
   const updateCommentInState = (id: string, value: string) => {
-    const updatedComments = commentsAmount.map((item) => {
+    const updatedComments = commentsAmount.map((item: CommentsType) => {
       if (item.id === id) {
         return { id: id, commentValue: value };
       } else {
@@ -65,7 +78,7 @@ const Cards = (props: PropsType) => {
     setCommentsAmount(newComments as CommentsType[]);
   };
   const deleteComment = (id: string) => {
-    const newComments = commentsAmount.filter((item) => {
+    const newComments = commentsAmount.filter((item: CommentsType) => {
       return item.id !== id;
     });
 
