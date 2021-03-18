@@ -1,14 +1,8 @@
-import { useState } from 'react';
-import List from './List';
+import List from '../List/List';
 import { StyledTables, Flexbox, StyledButton } from './styled';
 import { v1 as uuidv1 } from 'uuid';
 import { useStateWithLocalStorage } from '../../App';
 
-interface ListType {
-  id: string;
-  inputValue: string;
-  isEditMode: boolean;
-}
 const initialLists = [
   {
     id: uuidv1(),
@@ -32,6 +26,11 @@ const initialLists = [
   },
 ];
 
+interface ListType {
+  id: string;
+  inputValue: string;
+  isEditMode: boolean;
+}
 interface PropsType {
   loginName: string;
 }
@@ -53,14 +52,6 @@ const Board = (props: PropsType) => {
     setLists(updatedLists);
   };
 
-  const deleteList = (id: string) => {
-    const newList = lists.filter((item: ListType) => {
-      return item.id !== id;
-    });
-
-    setLists(newList);
-  };
-
   const addList = () => {
     console.log('------------');
     const newLists = [
@@ -69,6 +60,13 @@ const Board = (props: PropsType) => {
     ];
     setLists(newLists as ListType[]);
   };
+  const deleteList = (id: string) => {
+    const newList = lists.filter((item: ListType) => {
+      return item.id !== id;
+    });
+    setLists(newList);
+  };
+
   return (
     <StyledTables>
       <Flexbox>

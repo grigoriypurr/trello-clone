@@ -31,11 +31,14 @@ export const Flexbox = styled.div`
     props.justifyContent};
 `;
 
-export const Button = styled.button`
+export const ClearButton = styled.button`
   font-size: 1em;
-  font-weight: bold;
   cursor: pointer;
   background: rgba(255, 255, 255, 0.644);
+`;
+
+export const Button = styled(ClearButton)`
+  font-weight: bold;
   border-radius: 5px;
   max-width: 5em;
 `;

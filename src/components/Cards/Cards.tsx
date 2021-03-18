@@ -33,7 +33,7 @@ const Cards = (props: PropsType) => {
   const [cardTitleValue, setcardTitleValue] = useState(cardTitle);
   const [commentsAmount, setCommentsAmount] = useStateWithLocalStorage(
     [],
-    'commentsAmount' + cardTitle
+    'commentsAmount' + id
   );
   const [commentValue, setCommentValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);
@@ -81,7 +81,6 @@ const Cards = (props: PropsType) => {
     const newComments = commentsAmount.filter((item: CommentsType) => {
       return item.id !== id;
     });
-
     setCommentsAmount(newComments);
   };
 

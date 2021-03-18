@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { StyledList, Flexbox, Input, StyledListTitle } from './styled';
 import { v1 as uuidv1 } from 'uuid';
-import Cards from '../../Cards/Cards';
-import { useStateWithLocalStorage } from '../../../App';
+import Cards from '../Cards/Cards';
+import { useStateWithLocalStorage } from '../../App';
 
 interface PropsType {
   deleteList: (id: string) => void;
@@ -28,11 +28,9 @@ const List = (props: PropsType) => {
     updateListNameInState,
   } = props;
 
-  const iss = uuidv1();
-
   const [isEditMode, setEditMode] = useState(editMode);
   const [value, setValue] = useState(inputValue);
-  const [cards, setCards] = useStateWithLocalStorage([], 'cards' + inputValue);
+  const [cards, setCards] = useStateWithLocalStorage([], 'cards' + id);
 
   const inputActivateEditMode = () => {
     setEditMode(true);
@@ -72,8 +70,6 @@ const List = (props: PropsType) => {
     });
     setCards(updatedCards);
   };
-  console.log(cards);
-  // console.log(JSON.parse(window.localStorage.iss));
 
   return (
     <StyledList>

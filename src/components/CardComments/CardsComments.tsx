@@ -8,7 +8,6 @@ interface PropsType {
   addComment: () => void;
   loginName: string;
   onCommentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  commentValue: string;
   deleteComment: (id: string) => void;
   updateCommentInState: (id: string, value: string) => void;
 }
@@ -19,17 +18,16 @@ const CardsComments = (props: PropsType) => {
     addComment,
     loginName,
     onCommentChange,
-    commentValue,
     deleteComment,
     updateCommentInState,
   } = props;
 
   const [newCommenteditMode, setEditMode] = useState(false);
   const [inputValue, setInputvalue] = useState('');
+
   const activateEditMode = () => {
     setEditMode(true);
   };
-
   const handleClick = () => {
     setEditMode(false);
     addComment();
@@ -62,11 +60,9 @@ const CardsComments = (props: PropsType) => {
           commentValue={item.commentValue}
           deleteComment={deleteComment}
           commentId={item.id}
-          onCommentChange={(e) => onCommentChange(e)}
           updateCommentInState={updateCommentInState}
         />
       ))}
-      <div> </div>
     </div>
   );
 };

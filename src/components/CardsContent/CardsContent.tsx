@@ -13,7 +13,7 @@ import {
 import { CommentsType } from '../Cards/Cards';
 import CardsComments from '../CardComments/CardsComments';
 
-interface PropType {
+interface PropsType {
   open: boolean;
   closeModal: () => void;
   cardTitleValue: string;
@@ -30,7 +30,7 @@ interface PropType {
   updateCommentInState: (id: string, value: string) => void;
 }
 
-const CardsContent = (props: PropType) => {
+const CardsContent = (props: PropsType) => {
   const {
     open,
     closeModal,
@@ -51,7 +51,6 @@ const CardsContent = (props: PropType) => {
   const [cardsTitleEditMode, setCardsTitleEditMode] = useState(false);
   const [descriptionEditMode, setDescriptionEditMode] = useState(false);
   const [descriptionValue, setDescriptionValue] = useState('');
-  // const [CardsTitleEditMode, setCardsTitleEditMode] = useState(false);
 
   const toggleEditMode = (
     editMode: boolean,
@@ -59,6 +58,7 @@ const CardsContent = (props: PropType) => {
   ) => {
     editMode ? stateSetter(false) : stateSetter(true);
   };
+
   const onDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescriptionValue(e.currentTarget.value);
   };
@@ -109,7 +109,6 @@ const CardsContent = (props: PropType) => {
               </StyledButton>
             )}
           </Flexbox>
-
           {descriptionEditMode ? (
             <Input
               value={descriptionValue}
@@ -137,15 +136,11 @@ const CardsContent = (props: PropType) => {
             </StyledDescription>
           )}
         </div>
-
-        {/* <div>{loginName}</div> */}
-
         <CardsComments
           commentsAmount={commentsAmount}
           addComment={addComment}
           loginName={loginName}
           onCommentChange={(e) => onCommentChange(e)}
-          commentValue={commentValue}
           deleteComment={deleteComment}
           updateCommentInState={updateCommentInState}
         />

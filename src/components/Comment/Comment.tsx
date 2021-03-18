@@ -6,7 +6,6 @@ interface PropsType {
   commentValue: string;
   deleteComment: (id: string) => void;
   commentId: string;
-  onCommentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   updateCommentInState: (id: string, value: string) => void;
 }
 
@@ -16,7 +15,6 @@ const Comment = (props: PropsType) => {
     commentValue,
     deleteComment,
     commentId,
-
     updateCommentInState,
   } = props;
 

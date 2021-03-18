@@ -1,11 +1,12 @@
 import React from 'react';
 import { StyledPopup, StyledCloseButton, Input } from './styled';
 import { useStateWithLocalStorage } from '../../App';
+
 interface PropsType {
   setLoginName: React.Dispatch<any>;
 }
 
-const Login = (props: PropsType) => {
+const LoginForm = (props: PropsType) => {
   const { setLoginName } = props;
 
   const [open, setOpen] = useStateWithLocalStorage(true, 'isLoginFormClosed');
@@ -21,6 +22,7 @@ const Login = (props: PropsType) => {
   const onLoginValueChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setLoginValue(e.currentTarget.value);
   };
+
   return (
     <div>
       <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
@@ -32,4 +34,4 @@ const Login = (props: PropsType) => {
   );
 };
 
-export default Login;
+export default LoginForm;
