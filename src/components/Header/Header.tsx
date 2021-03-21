@@ -17,10 +17,9 @@ const Header = () => {
         <ClearButton onClick={clearLocalStorage}>
           Clear LocalStorage
         </ClearButton>
-        🛈
-        <Button>&#43;</Button>🛈
-        <Button>&#9432;🛈</Button>
-        <Button>&#128276;</Button>🛈🛈🛈🛈
+        <Button>&#43;</Button>
+        <Button>&#9432;</Button>
+        <Button>&#128276;</Button>
       </div>
     </Flexbox>
   );

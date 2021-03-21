@@ -6,57 +6,81 @@ import { useStateWithLocalStorage } from '../../App';
 const initialLists = [
   {
     id: uuidv1(),
-    inputValue: 'TODO',
+    listName: 'TODO',
     isEditMode: false,
+    cardsIds: []
   },
-  {
-    id: uuidv1(),
-    inputValue: 'In Progress',
-    isEditMode: false,
-  },
-  {
-    id: uuidv1(),
-    inputValue: 'Testing',
-    isEditMode: false,
-  },
-  {
-    id: uuidv1(),
-    inputValue: 'Done',
-    isEditMode: false,
-  },
+  // {
+  //   id: uuidv1(),
+  //   listName: 'In Progress',
+  //   isEditMode: false,
+  //   cardsIds:[]
+  // },
+  // {
+  //   id: uuidv1(),
+  //   listName: 'Testing',
+  //   isEditMode: false,
+  //   cardsIds:[]
+  // },
+  // {
+  //   id: uuidv1(),
+  //   listName: 'Done',
+  //   isEditMode: false,
+  //   cardsIds:[]
+  // },
 ];
 
+interface PropsType {
+  userName: string;
+}
+//почему не ругается на недостаток кардсайдис в листе при мапинге?
 interface ListType {
   id: string;
-  inputValue: string;
+  listName: string;
+  isEditMode: boolean;
+  cardsIds: string[]
+}
+interface CommentsType {
+  id: string;
+  description: string;
+  cardId: string;
+}
+export interface CardsType {
+  id: string;
+  cardsName: string;
+  description: string;
+  listId: string;
   isEditMode: boolean;
 }
-interface PropsType {
-  loginName: string;
-}
-
+//почему не типизируется в кастомном хуке?
 const Board = (props: PropsType) => {
   const [lists, setLists] = useStateWithLocalStorage(
     initialLists,
-    'initialLists'
+    'Lists'
+  );
+  const [comments, setComments] = useStateWithLocalStorage(
+    [],
+    'Comments'
+  );
+  const [cards, setCards] = useStateWithLocalStorage(
+    [],
+    'Cards'
   );
 
-  const updateListNameInState = (id: string, value: string) => {
+  const updateListNameInState = (listId: string, value: string) => {
     const updatedLists = lists.map((item: ListType) => {
-      if (item.id === id) {
-        return { ...item, inputValue: value, isEditMode: false };
+      if (item.id === listId) {
+        return { ...item, listName: value, isEditMode: false };
       } else {
         return item;
       }
     });
     setLists(updatedLists);
   };
-
   const addList = () => {
-    console.log('------------');
     const newLists = [
       ...lists,
-      { id: uuidv1(), inputValue: '', isEditMode: true },
+      { id: uuidv1(), listName: '', isEditMode: true, cardsIds: [] },
     ];
     setLists(newLists as ListType[]);
   };
@@ -65,6 +89,53 @@ const Board = (props: PropsType) => {
       return item.id !== id;
     });
     setLists(newList);
+    const newCards=cards.filter((card:CardsType)=>card.listId !== id)
+    setCards(newCards)
+  };
+  const updateCardsIdsInList = (listId: string, cardsIds: string[]) => {
+    const newLists = lists.map((list: ListType) => {
+      if (list.id === listId) {
+        return { ...list, cardsIds: cardsIds }
+      } else {
+        return list
+      }
+    })
+    setLists(newLists)
+  }
+  const updateDescriptionInCards = (cardId: string, value: string) => {
+    const newCards = cards.map((card: CardsType) => {
+      if (card.id === cardId) {
+        return { ...card, description: value }
+      } else {
+        return card
+      }
+    })
+    setCards(newCards)
+  }
+  const addCard = (listId: string) => {
+    const newCards = [
+      ...cards,
+      { id: uuidv1(), cardsName: '', description: '', listId, isEditMode: true },
+    ];
+    setCards(newCards as CardsType[]);
+
+  };
+  const deleteCard = (cardId: string) => {
+    const newCards = cards.filter((item: CardsType) => {
+      return item.id !== cardId;
+    });
+    setCards(newCards);
+    
+  };
+  const updateCardNameInState = (id: string, value: string) => {
+    const updatedCards = cards.map((item: CardsType) => {
+      if (item.id === id) {
+        return { ...item, cardsName: value, isEditMode: false };
+      } else {
+        return item;
+      }
+    });
+    setCards(updatedCards);
   };
 
   return (
@@ -75,10 +146,16 @@ const Board = (props: PropsType) => {
             updateListNameInState={updateListNameInState}
             key={item.id}
             deleteList={() => deleteList(item.id)}
-            inputValue={item.inputValue}
+            listName={item.listName}
             editMode={item.isEditMode}
+            cards={cards}
             id={item.id}
-            loginName={props.loginName}
+            userName={props.userName}
+            addCard={addCard}
+            deleteCard={deleteCard}
+            updateCardNameInState={updateCardNameInState}
+            updateCardsIdsInList={updateCardsIdsInList}
+            updateDescriptionInCards={updateDescriptionInCards}
           />
         ))}
         <StyledButton>

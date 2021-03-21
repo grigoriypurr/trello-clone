@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyledCards, StyledTextarea, StyledButton } from './styled';
 import CardsContent from '../CardsContent/CardsContent';
 import { v1 as uuidv1 } from 'uuid';
@@ -7,11 +7,18 @@ import { useStateWithLocalStorage } from '../../App';
 interface PropsType {
   cardTitle: string;
   isEditMode: boolean;
-  deleteCard: (id: string) => void;
-  id: string;
-  loginName: string;
+  deleteCard: (cardId: string) => void;
+  cardId: string;
+  listId:string;
+  userName: string;
   listTitle: string;
+  cardsIds:string[];
   updateCardNameInState: (id: string, value: string) => void;
+  updateDescriptionInCards:(cardId:string,value:string)=>void
+  description: string;
+  updateCardsIdsInList: (listId: string, cardsIds: string[]) => void
+
+
 }
 export interface CommentsType {
   id: string;
@@ -23,25 +30,37 @@ const Cards = (props: PropsType) => {
     cardTitle,
     isEditMode,
     deleteCard,
-    id,
-    loginName,
+    cardId,
+    userName,
     listTitle,
+    listId,
     updateCardNameInState,
+    cardsIds,
+    updateDescriptionInCards,
+    description,
+    updateCardsIdsInList
   } = props;
 
   const [editMode, setEditMode] = useState(isEditMode);
   const [cardTitleValue, setcardTitleValue] = useState(cardTitle);
   const [commentsAmount, setCommentsAmount] = useStateWithLocalStorage(
     [],
-    'commentsAmount' + id
+    'commentsAmount' + cardId
   );
   const [commentValue, setCommentValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  
+
 
   const closeModal = () => setIsOpen(false);
 
   const deactivateEditMode = () => {
-    updateCardNameInState(id, cardTitleValue);
+    if (!cardTitleValue) {
+      deleteCard(cardId)
+      updateCardsIdsInList(listId,cardsIds)
+      return
+    }
+    updateCardNameInState(cardId, cardTitleValue);
     setEditMode(false);
   };
   const updateCommentInState = (id: string, value: string) => {
@@ -55,9 +74,6 @@ const Cards = (props: PropsType) => {
     setCommentsAmount(updatedComments);
   };
 
-  const activateEditMode = () => {
-    setEditMode(true);
-  };
   const onTextareaChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
@@ -66,7 +82,6 @@ const Cards = (props: PropsType) => {
 
   const onCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCommentValue(e.currentTarget.value);
-    console.log(commentValue);
   };
 
   const addComment = () => {
@@ -95,11 +110,12 @@ const Cards = (props: PropsType) => {
         />
       ) : (
         <StyledCards
-          // onDoubleClick={activateEditMode}
           onClick={() => setIsOpen((o) => !o)}
         >
           {cardTitleValue}
-          <StyledButton onClick={() => deleteCard(id)}>&#215;</StyledButton>
+          <StyledButton onClick={() => {deleteCard(cardId)
+          updateCardsIdsInList(listId,cardsIds)
+          }}>&#215;</StyledButton>
           {!!commentsAmount.length && (
             <div>{commentsAmount.length} comments</div>
           )}
@@ -108,19 +124,22 @@ const Cards = (props: PropsType) => {
       <CardsContent
         open={isOpen}
         closeModal={closeModal}
-        cardTitleValue={cardTitleValue}
+        cardTitle={cardTitle}
         commentsAmount={commentsAmount}
-        loginName={loginName}
+        userName={userName}
         listTitle={listTitle}
-        deleteCard={() => deleteCard(id)}
+        deleteCard={deleteCard}
         addComment={addComment}
         onCommentChange={(event) => onCommentChange(event)}
-        id={id}
+        id={cardId}
         commentValue={commentValue}
         deleteComment={deleteComment}
         updateCommentInState={updateCommentInState}
         updateCardNameInState={updateCardNameInState}
         setcardTitleValue={setcardTitleValue}
+        updateDescriptionInCards={updateDescriptionInCards}
+    description={description}
+
       />
     </>
   );

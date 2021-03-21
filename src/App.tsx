@@ -16,13 +16,13 @@ export const useStateWithLocalStorage = (defaultValue: any, key: string) => {
 };
 
 const App = () => {
-  const [loginName, setLoginName] = useStateWithLocalStorage('', 'loginName');
+  const [userName, setUserName] = useStateWithLocalStorage('', 'userName');
 
   return (
     <StyledApp>
-      <LoginForm setLoginName={setLoginName} />
+      <LoginForm setUserName={setUserName} />
       <Header />
-      <Board loginName={loginName} />
+      <Board userName={userName} />
     </StyledApp>
   );
 };

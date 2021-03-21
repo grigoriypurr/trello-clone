@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { StyledComment, StyledDiv, Input, StyledButton } from './styled';
 
 interface PropsType {
-  loginName: string;
+  userName: string;
   commentValue: string;
   deleteComment: (id: string) => void;
   commentId: string;
@@ -11,7 +11,7 @@ interface PropsType {
 
 const Comment = (props: PropsType) => {
   const {
-    loginName,
+    userName,
     commentValue,
     deleteComment,
     commentId,
@@ -38,7 +38,7 @@ const Comment = (props: PropsType) => {
 
   return (
     <StyledDiv>
-      <div> {loginName}</div>
+      <div> {userName}</div>
       <StyledComment>
         {editMode ? (
           <div>

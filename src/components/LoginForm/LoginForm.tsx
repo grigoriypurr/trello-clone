@@ -1,22 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyledPopup, StyledCloseButton, Input } from './styled';
-import { useStateWithLocalStorage } from '../../App';
 
 interface PropsType {
-  setLoginName: React.Dispatch<any>;
+  setUserName: React.Dispatch<any>;
 }
 
 const LoginForm = (props: PropsType) => {
-  const { setLoginName } = props;
+  const { setUserName } = props;
 
-  const [open, setOpen] = useStateWithLocalStorage(true, 'isLoginFormClosed');
-  const [loginValue, setLoginValue] = useStateWithLocalStorage(
-    '',
-    'loginFormValue'
-  );
+  const [open, setOpen] = useState(true);
+  const [loginValue, setLoginValue] = useState('');
 
   const closeModal = () => {
-    setLoginName(loginValue);
+    setUserName(loginValue);
     setOpen(false);
   };
   const onLoginValueChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -25,7 +21,7 @@ const LoginForm = (props: PropsType) => {
 
   return (
     <div>
-      <StyledPopup open={open} closeOnDocumentClick onClose={closeModal}>
+      <StyledPopup open={open} closeOnDocumentClick={false} onClose={closeModal}>
         <h2>Enter your name:</h2>
         <Input value={loginValue} onChange={onLoginValueChange} />
         <StyledCloseButton onClick={closeModal}>Confirm</StyledCloseButton>

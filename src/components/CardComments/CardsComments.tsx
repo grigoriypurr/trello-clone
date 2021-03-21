@@ -6,7 +6,7 @@ import Comment from '../Comment/Comment';
 interface PropsType {
   commentsAmount: CommentsType[];
   addComment: () => void;
-  loginName: string;
+  userName: string;
   onCommentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   deleteComment: (id: string) => void;
   updateCommentInState: (id: string, value: string) => void;
@@ -16,7 +16,7 @@ const CardsComments = (props: PropsType) => {
   const {
     commentsAmount,
     addComment,
-    loginName,
+    userName,
     onCommentChange,
     deleteComment,
     updateCommentInState,
@@ -56,7 +56,7 @@ const CardsComments = (props: PropsType) => {
       {commentsAmount.map((item) => (
         <Comment
           key={item.id}
-          loginName={loginName}
+          userName={userName}
           commentValue={item.commentValue}
           deleteComment={deleteComment}
           commentId={item.id}

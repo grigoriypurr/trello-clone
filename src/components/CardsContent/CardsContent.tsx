@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyledPopup,
   StyledCloseButton,
@@ -17,9 +17,9 @@ import { useStateWithLocalStorage } from '../../App';
 interface PropsType {
   open: boolean;
   closeModal: () => void;
-  cardTitleValue: string;
+  cardTitle: string;
   commentsAmount: CommentsType[];
-  loginName: string;
+  userName: string;
   listTitle: string;
   deleteCard: (id: string) => void;
   id: string;
@@ -30,6 +30,9 @@ interface PropsType {
   updateCommentInState: (id: string, value: string) => void;
   updateCardNameInState: (id: string, value: string) => void;
   setcardTitleValue: React.Dispatch<React.SetStateAction<string>>;
+  updateDescriptionInCards: (cardId: string, value: string) => void
+  description: string
+
 }
 
 const CardsContent = (props: PropsType) => {
@@ -37,8 +40,8 @@ const CardsContent = (props: PropsType) => {
     open,
     closeModal,
     commentsAmount,
-    cardTitleValue,
-    loginName,
+    cardTitle,
+    userName,
     listTitle,
     id,
     deleteCard,
@@ -48,18 +51,22 @@ const CardsContent = (props: PropsType) => {
     updateCommentInState,
     updateCardNameInState,
     setcardTitleValue,
+    updateDescriptionInCards,
+    description
+
   } = props;
 
   const [cardsTitleEditMode, setCardsTitleEditMode] = useState(false);
-  const [modalCardTitleValue, setModalCardTitleValue] = useState(
-    cardTitleValue
-  );
+  const [modalCardTitleValue, setModalCardTitleValue] = useState(cardTitle);
 
   const [descriptionEditMode, setDescriptionEditMode] = useState(false);
-  const [descriptionValue, setDescriptionValue] = useStateWithLocalStorage(
-    '',
-    'description' + id
+  const [descriptionValue, setDescriptionValue] = useState(
+    description
   );
+  //почему юзэффект юзаем?
+  useEffect(() => {
+    setModalCardTitleValue(cardTitle);
+  }, [cardTitle])
 
   const toggleEditMode = (
     editMode: boolean,
@@ -104,7 +111,7 @@ const CardsContent = (props: PropsType) => {
               toggleEditMode(cardsTitleEditMode, setCardsTitleEditMode)
             }
           >
-            <h4>{modalCardTitleValue}</h4>
+            <h4>{cardTitle}</h4>
             <StyledSpan>
               in list{' '}
               <StyledSpanWithUnderline> {listTitle}</StyledSpanWithUnderline>
@@ -130,8 +137,10 @@ const CardsContent = (props: PropsType) => {
             <Input
               value={descriptionValue}
               onChange={onDescriptionChange}
-              onBlur={() =>
+              onBlur={() => {
                 toggleEditMode(descriptionEditMode, setDescriptionEditMode)
+                updateDescriptionInCards(id, descriptionValue)
+              }
               }
               autoFocus
             />
@@ -145,8 +154,9 @@ const CardsContent = (props: PropsType) => {
             </div>
           ) : (
             <StyledDescription
-              onClick={() =>
+              onClick={() => {
                 toggleEditMode(descriptionEditMode, setDescriptionEditMode)
+              }
               }
             >
               Add a more detailed description...
@@ -156,7 +166,7 @@ const CardsContent = (props: PropsType) => {
         <CardsComments
           commentsAmount={commentsAmount}
           addComment={addComment}
-          loginName={loginName}
+          userName={userName}
           onCommentChange={(e) => onCommentChange(e)}
           deleteComment={deleteComment}
           updateCommentInState={updateCommentInState}
