@@ -10,7 +10,7 @@ import {
   StyledSpan,
   StyledSpanWithUnderline,
 } from './styled';
-import { CommentsType } from '../Cards/Cards';
+import { CommentsType } from '../Board/Board';
 import CardsComments from '../CardComments/CardsComments';
 import { useStateWithLocalStorage } from '../../App';
 
@@ -23,7 +23,7 @@ interface PropsType {
   listTitle: string;
   deleteCard: (id: string) => void;
   id: string;
-  addComment: () => void;
+  addComment: (commentValue:string, cardId:string) => void;
   onCommentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   commentValue: string;
   deleteComment: (id: string) => void;
@@ -170,6 +170,7 @@ const CardsContent = (props: PropsType) => {
           onCommentChange={(e) => onCommentChange(e)}
           deleteComment={deleteComment}
           updateCommentInState={updateCommentInState}
+          id={id}
         />
         <StyledButton
           type="button"

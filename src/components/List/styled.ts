@@ -8,7 +8,9 @@ export const StyledList = styled.div`
   flex-direction: column;
 `;
 export const Flexbox = styled.div`
+  position:relative;
   display: flex;
+  flex-direction: flex-start;
   justify-content: ${(props: { justifyContent?: string }) =>
     props.justifyContent};
   /* flex-shrink: 0; */
@@ -27,4 +29,12 @@ export const StyledListTitle = styled.p`
   width: 300px;
   white-space: normal;
   word-break: break-all;
+`;
+export const StyledButton = styled.button`
+  position: absolute;
+  right: 0;
+  opacity: 0;
+  &:hover {
+    opacity: 1;
+  }
 `;

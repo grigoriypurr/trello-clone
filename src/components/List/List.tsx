@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { StyledList, Flexbox, Input, StyledListTitle } from './styled';
+import { StyledList, Flexbox, Input, StyledListTitle,StyledButton } from './styled';
 import { v1 as uuidv1 } from 'uuid';
 import Cards from '../Cards/Cards';
 import { useStateWithLocalStorage } from '../../App';
-import { CardsType } from '../Board/Board';
+import { CardsType, CommentsType } from '../Board/Board';
 
 interface PropsType {
   deleteList: (id: string) => void;
@@ -18,6 +18,10 @@ interface PropsType {
   updateCardsIdsInList: (listId: string, cardsIds: string[]) => void
   updateDescriptionInCards: (cardId: string, value: string) => void
   cards: CardsType[]
+  addComment:(commentValue:string, cardId:string) =>void
+  deleteComment: (id: string)=>void
+  updateCommentInState: (id: string, value: string) =>void
+  comments:CommentsType[]
 }
 
 
@@ -34,7 +38,12 @@ const List = (props: PropsType) => {
     updateCardNameInState,
     cards,
     updateCardsIdsInList,
-    updateDescriptionInCards
+    updateDescriptionInCards,
+    addComment,
+    deleteComment,
+    updateCommentInState,
+    comments
+    
   } = props;
   console.log("props cards:" + cards)
   const filteredListsCards = cards.filter(card => card.listId === id)
@@ -80,9 +89,12 @@ const List = (props: PropsType) => {
   return (
     <StyledList>
       {!isEditMode ? (
+        <Flexbox justifyContent="space-between">
         <StyledListTitle onClick={inputActivateEditMode}>
           {value}
         </StyledListTitle>
+        <StyledButton onClick={() => {deleteList(id)}}>&#215;</StyledButton>
+        </Flexbox>
       ) : (
         <Input
           value={value}
@@ -106,12 +118,16 @@ const List = (props: PropsType) => {
           updateDescriptionInCards={updateDescriptionInCards}
           description={item.description}
           updateCardsIdsInList={updateCardsIdsInList}
+          addComment={addComment}
+            deleteComment={deleteComment}
+            updateCommentInState={updateCommentInState}
+            comments={comments}
         />
       ))}
       <Flexbox justifyContent="space-between">
         <button onClick={handleClick} >Add Card</button>
         <button onClick={() => updateCardsIdsInList(id, cardsIdsArray)}>update</button>
-        <div onClick={() => {deleteList(id)}}>&#215;</div>
+        
       </Flexbox>
     </StyledList>
   );

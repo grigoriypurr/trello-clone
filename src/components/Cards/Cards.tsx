@@ -3,26 +3,26 @@ import { StyledCards, StyledTextarea, StyledButton } from './styled';
 import CardsContent from '../CardsContent/CardsContent';
 import { v1 as uuidv1 } from 'uuid';
 import { useStateWithLocalStorage } from '../../App';
+import { CommentsType } from '../Board/Board';
 
 interface PropsType {
   cardTitle: string;
   isEditMode: boolean;
   deleteCard: (cardId: string) => void;
   cardId: string;
-  listId:string;
+  listId: string;
   userName: string;
   listTitle: string;
-  cardsIds:string[];
+  cardsIds: string[];
   updateCardNameInState: (id: string, value: string) => void;
-  updateDescriptionInCards:(cardId:string,value:string)=>void
+  updateDescriptionInCards: (cardId: string, value: string) => void
   description: string;
   updateCardsIdsInList: (listId: string, cardsIds: string[]) => void
+  addComment: (commentValue: string, cardId: string) => void
+  deleteComment: (id: string) => void
+  updateCommentInState: (id: string, value: string) => void
+  comments: CommentsType[]
 
-
-}
-export interface CommentsType {
-  id: string;
-  commentValue: string;
 }
 
 const Cards = (props: PropsType) => {
@@ -38,41 +38,36 @@ const Cards = (props: PropsType) => {
     cardsIds,
     updateDescriptionInCards,
     description,
-    updateCardsIdsInList
+    updateCardsIdsInList,
+    addComment,
+    deleteComment,
+    updateCommentInState,
+    comments
   } = props;
-
+  const filteredComments = comments.filter((comment: CommentsType) => comment.cardId === cardId )
   const [editMode, setEditMode] = useState(isEditMode);
   const [cardTitleValue, setcardTitleValue] = useState(cardTitle);
-  const [commentsAmount, setCommentsAmount] = useStateWithLocalStorage(
-    [],
-    'commentsAmount' + cardId
-  );
+  // const [commentsAmount, setCommentsAmount] = useState( filteredComments );
+
+
   const [commentValue, setCommentValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  
 
 
+// useEffect(()=>{filteredComments},[comments])
   const closeModal = () => setIsOpen(false);
 
   const deactivateEditMode = () => {
     if (!cardTitleValue) {
       deleteCard(cardId)
-      updateCardsIdsInList(listId,cardsIds)
+      updateCardsIdsInList(listId, cardsIds)
       return
     }
     updateCardNameInState(cardId, cardTitleValue);
     setEditMode(false);
   };
-  const updateCommentInState = (id: string, value: string) => {
-    const updatedComments = commentsAmount.map((item: CommentsType) => {
-      if (item.id === id) {
-        return { id: id, commentValue: value };
-      } else {
-        return item;
-      }
-    });
-    setCommentsAmount(updatedComments);
-  };
+
+
 
   const onTextareaChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -84,20 +79,6 @@ const Cards = (props: PropsType) => {
     setCommentValue(e.currentTarget.value);
   };
 
-  const addComment = () => {
-    if (!commentValue) return;
-    const newComments = [
-      ...commentsAmount,
-      { id: uuidv1(), commentValue: commentValue },
-    ];
-    setCommentsAmount(newComments as CommentsType[]);
-  };
-  const deleteComment = (id: string) => {
-    const newComments = commentsAmount.filter((item: CommentsType) => {
-      return item.id !== id;
-    });
-    setCommentsAmount(newComments);
-  };
 
   return (
     <>
@@ -113,11 +94,12 @@ const Cards = (props: PropsType) => {
           onClick={() => setIsOpen((o) => !o)}
         >
           {cardTitleValue}
-          <StyledButton onClick={() => {deleteCard(cardId)
-          updateCardsIdsInList(listId,cardsIds)
+          <StyledButton onClick={() => {
+            deleteCard(cardId)
+            updateCardsIdsInList(listId, cardsIds)
           }}>&#215;</StyledButton>
-          {!!commentsAmount.length && (
-            <div>{commentsAmount.length} comments</div>
+          {!!filteredComments.length && (
+            <div>{filteredComments.length} comments</div>
           )}
         </StyledCards>
       )}
@@ -125,7 +107,7 @@ const Cards = (props: PropsType) => {
         open={isOpen}
         closeModal={closeModal}
         cardTitle={cardTitle}
-        commentsAmount={commentsAmount}
+        commentsAmount={filteredComments}
         userName={userName}
         listTitle={listTitle}
         deleteCard={deleteCard}
@@ -138,7 +120,7 @@ const Cards = (props: PropsType) => {
         updateCardNameInState={updateCardNameInState}
         setcardTitleValue={setcardTitleValue}
         updateDescriptionInCards={updateDescriptionInCards}
-    description={description}
+        description={description}
 
       />
     </>

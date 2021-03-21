@@ -40,7 +40,7 @@ interface ListType {
   isEditMode: boolean;
   cardsIds: string[]
 }
-interface CommentsType {
+export interface CommentsType {
   id: string;
   description: string;
   cardId: string;
@@ -67,6 +67,32 @@ const Board = (props: PropsType) => {
     'Cards'
   );
 
+// comments
+  const updateCommentInState = (id: string, value: string) => {
+    const updatedComments = comments.map((item: CommentsType) => {
+      if (item.id === id) {
+        return {...item, description: value };
+      } else {
+        return item;
+      }
+    });
+    setComments(updatedComments);
+  };
+  const addComment = (commentValue:string, cardId:string) => {
+    if (!commentValue) return;
+    const newComments = [
+      ...comments,
+      { id: uuidv1(),description: commentValue, cardId },
+    ];
+    setComments(newComments as CommentsType[]);
+  };
+  const deleteComment = (id: string) => {
+    const newComments = comments.filter((item: CommentsType) => {
+      return item.id !== id;
+    });
+    setComments(newComments);
+  };
+//lists
   const updateListNameInState = (listId: string, value: string) => {
     const updatedLists = lists.map((item: ListType) => {
       if (item.id === listId) {
@@ -85,6 +111,10 @@ const Board = (props: PropsType) => {
     setLists(newLists as ListType[]);
   };
   const deleteList = (id: string) => {
+
+    const deletedList=lists.filter((item:ListType)=>item.id===id)
+    const newComments=comments.filter((comment: CommentsType)=>!deletedList[0].cardsIds.includes(comment.cardId))
+    setComments(newComments)
     const newList = lists.filter((item: ListType) => {
       return item.id !== id;
     });
@@ -92,6 +122,7 @@ const Board = (props: PropsType) => {
     const newCards=cards.filter((card:CardsType)=>card.listId !== id)
     setCards(newCards)
   };
+  //cards
   const updateCardsIdsInList = (listId: string, cardsIds: string[]) => {
     const newLists = lists.map((list: ListType) => {
       if (list.id === listId) {
@@ -125,7 +156,8 @@ const Board = (props: PropsType) => {
       return item.id !== cardId;
     });
     setCards(newCards);
-    
+    const newComments=comments.filter((comment:CommentsType)=>comment.cardId !== cardId)
+    setComments(newComments)
   };
   const updateCardNameInState = (id: string, value: string) => {
     const updatedCards = cards.map((item: CardsType) => {
@@ -156,6 +188,10 @@ const Board = (props: PropsType) => {
             updateCardNameInState={updateCardNameInState}
             updateCardsIdsInList={updateCardsIdsInList}
             updateDescriptionInCards={updateDescriptionInCards}
+            addComment={addComment}
+            deleteComment={deleteComment}
+            updateCommentInState={updateCommentInState}
+            comments={comments}
           />
         ))}
         <StyledButton>

@@ -1,15 +1,16 @@
 import { Input, StyledComment, StyledButton } from './styled';
-import { CommentsType } from '../Cards/Cards';
+import { CommentsType } from '../Board/Board';
 import { useState } from 'react';
 import Comment from '../Comment/Comment';
 
 interface PropsType {
   commentsAmount: CommentsType[];
-  addComment: () => void;
+  addComment: (commentValue:string, cardId:string) => void;
   userName: string;
   onCommentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   deleteComment: (id: string) => void;
   updateCommentInState: (id: string, value: string) => void;
+  id:string
 }
 
 const CardsComments = (props: PropsType) => {
@@ -20,6 +21,7 @@ const CardsComments = (props: PropsType) => {
     onCommentChange,
     deleteComment,
     updateCommentInState,
+    id
   } = props;
 
   const [newCommenteditMode, setEditMode] = useState(false);
@@ -30,7 +32,7 @@ const CardsComments = (props: PropsType) => {
   };
   const handleClick = () => {
     setEditMode(false);
-    addComment();
+    addComment(inputValue,id);
     setInputvalue('');
   };
   const onInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -57,7 +59,7 @@ const CardsComments = (props: PropsType) => {
         <Comment
           key={item.id}
           userName={userName}
-          commentValue={item.commentValue}
+          commentValue={item.description}
           deleteComment={deleteComment}
           commentId={item.id}
           updateCommentInState={updateCommentInState}

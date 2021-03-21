@@ -3,16 +3,7 @@ import styled from 'styled-components';
 
 export const StyledPopup = styled(Popup)`
   &-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
+   
   }
   &-content {
     background-color: purple;
@@ -24,9 +15,12 @@ export const StyledPopup = styled(Popup)`
     min-height: 50vh;
     min-width: 30vw;
     max-width: 30vw;
+    max-height:80vh;
     background-color: white;
     border: 2px solid black;
     padding: 30px;
+    overflow-x: hidden; 
+    overflow-y: auto; 
   }
 `;
 export const Flexbox = styled.div`
