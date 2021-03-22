@@ -4,8 +4,8 @@ import { StyledComment, StyledDiv, Input, StyledButton } from './styled';
 interface PropsType {
   userName: string;
   commentValue: string;
-  deleteComment: (id: string) => void;
   commentId: string;
+  deleteComment: (id: string) => void;
   updateCommentInState: (id: string, value: string) => void;
 }
 
@@ -13,8 +13,8 @@ const Comment = (props: PropsType) => {
   const {
     userName,
     commentValue,
-    deleteComment,
     commentId,
+    deleteComment,
     updateCommentInState,
   } = props;
 
@@ -24,12 +24,10 @@ const Comment = (props: PropsType) => {
   const activateEditMode = () => {
     setEditMode(true);
   };
-
   const deactivateEditMode = () => {
     updateCommentInState(commentId, inputValue);
     setEditMode(false);
   };
-
   const onInputValueChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
@@ -38,7 +36,7 @@ const Comment = (props: PropsType) => {
 
   return (
     <StyledDiv>
-      <div> {userName}</div>
+      <div>{userName}</div>
       <StyledComment>
         {editMode ? (
           <div>
@@ -63,4 +61,5 @@ const Comment = (props: PropsType) => {
     </StyledDiv>
   );
 };
+
 export default Comment;

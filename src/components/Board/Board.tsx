@@ -1,4 +1,4 @@
-import List from '../List/List';
+import List from '../List';
 import { StyledTables, Flexbox, StyledButton } from './styled';
 import { v1 as uuidv1 } from 'uuid';
 import { useStateWithLocalStorage } from '../../hooks';
@@ -15,31 +15,31 @@ const initialLists = [
     id: uuidv1(),
     listName: 'In Progress',
     isEditMode: false,
-    cardsIds:[]
+    cardsIds: []
   },
   {
     id: uuidv1(),
     listName: 'Testing',
     isEditMode: false,
-    cardsIds:[]
+    cardsIds: []
   },
   {
     id: uuidv1(),
     listName: 'Done',
     isEditMode: false,
-    cardsIds:[]
+    cardsIds: []
   },
 ];
 
 interface PropsType {
   userName: string;
 }
-//почему не ругается на недостаток кардсайдис в листе при мапинге?
+
 interface ListType {
+  isEditMode: boolean;
   id: string;
   listName: string;
-  isEditMode: boolean;
-  cardsIds: string[]
+  cardsIds: string[];
 }
 export interface CommentsType {
   id: string;
@@ -47,13 +47,13 @@ export interface CommentsType {
   cardId: string;
 }
 export interface CardsType {
+  isEditMode: boolean;
   id: string;
   cardsName: string;
   description: string;
   listId: string;
-  isEditMode: boolean;
 }
-//почему не типизируется в кастомном хуке?
+
 const Board = (props: PropsType) => {
   const [lists, setLists] = useStateWithLocalStorage(
     initialLists,
@@ -67,23 +67,22 @@ const Board = (props: PropsType) => {
     [],
     'Cards'
   );
-
-// comments
+  // comments
   const updateCommentInState = (id: string, value: string) => {
     const updatedComments = comments.map((item: CommentsType) => {
       if (item.id === id) {
-        return {...item, description: value };
+        return { ...item, description: value };
       } else {
         return item;
       }
     });
     setComments(updatedComments);
   };
-  const addComment = (commentValue:string, cardId:string) => {
+  const addComment = (commentValue: string, cardId: string) => {
     if (!commentValue) return;
     const newComments = [
       ...comments,
-      { id: uuidv1(),description: commentValue, cardId },
+      { id: uuidv1(), description: commentValue, cardId },
     ];
     setComments(newComments as CommentsType[]);
   };
@@ -93,7 +92,7 @@ const Board = (props: PropsType) => {
     });
     setComments(newComments);
   };
-//lists
+  //lists
   const updateListNameInState = (listId: string, value: string) => {
     const updatedLists = lists.map((item: ListType) => {
       if (item.id === listId) {
@@ -113,61 +112,61 @@ const Board = (props: PropsType) => {
   };
   const deleteList = (id: string) => {
 
-    const deletedList=lists.filter((item:ListType)=>item.id===id)
-    const newComments=comments.filter((comment: CommentsType)=>!deletedList[0].cardsIds.includes(comment.cardId))
-    setComments(newComments)
+    const deletedList = lists.filter((item: ListType) => item.id === id);
+    const newComments = comments.filter((comment: CommentsType) => !deletedList[0].cardsIds.includes(comment.cardId));
+    setComments(newComments);
     const newList = lists.filter((item: ListType) => {
       return item.id !== id;
     });
     setLists(newList);
-    const newCards=cards.filter((card:CardsType)=>card.listId !== id)
-    setCards(newCards)
+    const newCards = cards.filter((card: CardsType) => card.listId !== id);
+    setCards(newCards);
   };
   //cards
   const updateCardsIdsInList = (listId: string, cardsIds: string) => {
     const newLists = lists.map((list: ListType) => {
       if (list.id === listId) {
-        return { ...list, cardsIds: [...list.cardsIds,cardsIds] }
+        return { ...list, cardsIds: [...list.cardsIds, cardsIds] };
       } else {
-        return list
+        return list;
       }
-    })
-    setLists(newLists)
-  }
+    });
+    setLists(newLists);
+  };
   const updateDescriptionInCards = (cardId: string, value: string) => {
     const newCards = cards.map((card: CardsType) => {
       if (card.id === cardId) {
-        return { ...card, description: value }
+        return { ...card, description: value };
       } else {
-        return card
+        return card;
       }
-    })
-    setCards(newCards)
-  }
+    });
+    setCards(newCards);
+  };
   const addCard = (listId: string) => {
-    const addedCard = { id: uuidv1(), cardsName: '', description: '', listId, isEditMode: true }
+    const addedCard = { id: uuidv1(), cardsName: '', description: '', listId, isEditMode: true };
     const newCards = [
       ...cards,
       addedCard
     ];
     setCards(newCards as CardsType[]);
-    updateCardsIdsInList(listId,addedCard.id)
+    updateCardsIdsInList(listId, addedCard.id);
   };
-  const deleteCard = (listId:string,cardId: string) => {
+  const deleteCard = (listId: string, cardId: string) => {
     const newCards = cards.filter((item: CardsType) => {
       return item.id !== cardId;
     });
     setCards(newCards);
-    const newComments=comments.filter((comment:CommentsType)=>comment.cardId !== cardId)
-    setComments(newComments)
+    const newComments = comments.filter((comment: CommentsType) => comment.cardId !== cardId);
+    setComments(newComments);
     const newLists = lists.map((list: ListType) => {
       if (list.id === listId) {
-        return { ...list, cardsIds: [...list.cardsIds.filter(id=>id!==cardId)] }
+        return { ...list, cardsIds: [...list.cardsIds.filter(id => id !== cardId)] };
       } else {
-        return list
+        return list;
       }
-    })
-    setLists(newLists)
+    });
+    setLists(newLists);
   };
   const updateCardNameInState = (id: string, value: string) => {
     const updatedCards = cards.map((item: CardsType) => {
@@ -185,23 +184,22 @@ const Board = (props: PropsType) => {
       <Flexbox>
         {lists.map((item: ListType) => (
           <List
-            updateListNameInState={updateListNameInState}
             key={item.id}
-            deleteList={() => deleteList(item.id)}
-            listName={item.listName}
             editMode={item.isEditMode}
-            cards={cards}
+            listName={item.listName}
             id={item.id}
+            cards={cards}
+            comments={comments}
             userName={props.userName}
-            addCard={addCard}
-            deleteCard={deleteCard}
-            updateCardNameInState={updateCardNameInState}
-            updateCardsIdsInList={updateCardsIdsInList}
-            updateDescriptionInCards={updateDescriptionInCards}
             addComment={addComment}
             deleteComment={deleteComment}
+            addCard={addCard}
+            deleteCard={deleteCard}
+            deleteList={deleteList}
+            updateListNameInState={updateListNameInState}
+            updateCardNameInState={updateCardNameInState}
+            updateDescriptionInCards={updateDescriptionInCards}
             updateCommentInState={updateCommentInState}
-            comments={comments}
           />
         ))}
         <StyledButton>

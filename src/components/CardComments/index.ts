@@ -1,3 +1,2 @@
-import CardsComments from './CardsComments';
+export {default} from './CardsComments';
 
-export default CardsComments;

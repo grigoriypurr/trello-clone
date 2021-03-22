@@ -11,62 +11,59 @@ import {
   StyledSpanWithUnderline,
 } from './styled';
 import { CommentsType } from '../Board/Board';
-import CardsComments from '../CardComments/CardsComments';
-
+import CardsComments from '../CardComments';
 
 interface PropsType {
   open: boolean;
-  closeModal: () => void;
+  description: string;
   cardTitle: string;
-  commentsAmount: CommentsType[];
   userName: string;
   listTitle: string;
-  deleteCard: (id:string,cardId: string) => void;
   id: string;
-  addComment: (commentValue:string, cardId:string) => void;
-  onCommentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  commentValue: string;
+  listId: string;
+  commentsAmount: CommentsType[];
+  closeModal: () => void;
+  addComment: (commentValue: string, cardId: string) => void;
   deleteComment: (id: string) => void;
+  deleteCard: (id: string, cardId: string) => void;
   updateCommentInState: (id: string, value: string) => void;
   updateCardNameInState: (id: string, value: string) => void;
-  setcardTitleValue: React.Dispatch<React.SetStateAction<string>>;
-  updateDescriptionInCards: (cardId: string, value: string) => void
-  description: string
-  listId:string
+  updateDescriptionInCards: (cardId: string, value: string) => void;
+  onCommentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  setCardTitleValue: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const CardsContent = (props: PropsType) => {
   const {
     open,
-    closeModal,
-    commentsAmount,
+    description,
     cardTitle,
     userName,
     listTitle,
     id,
-    deleteCard,
+    listId,
+    commentsAmount,
+    closeModal,
     addComment,
-    onCommentChange,
     deleteComment,
+    deleteCard,
     updateCommentInState,
     updateCardNameInState,
-    setcardTitleValue,
     updateDescriptionInCards,
-    description,
-    listId
+    onCommentChange,
+    setCardTitleValue,
   } = props;
 
   const [cardsTitleEditMode, setCardsTitleEditMode] = useState(false);
   const [modalCardTitleValue, setModalCardTitleValue] = useState(cardTitle);
-
   const [descriptionEditMode, setDescriptionEditMode] = useState(false);
   const [descriptionValue, setDescriptionValue] = useState(
     description
   );
-  //почему юзэффект юзаем?
+
   useEffect(() => {
     setModalCardTitleValue(cardTitle);
-  }, [cardTitle])
+  }, [cardTitle]);
 
   const toggleEditMode = (
     editMode: boolean,
@@ -82,10 +79,9 @@ const CardsContent = (props: PropsType) => {
   const onDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescriptionValue(e.currentTarget.value);
   };
-
   const handleInputOnBlur = (id: string, cardTitleValue: string) => {
     updateCardNameInState(id, cardTitleValue);
-    setcardTitleValue(cardTitleValue);
+    setCardTitleValue(cardTitleValue);
     toggleEditMode(cardsTitleEditMode, setCardsTitleEditMode);
   };
 
@@ -98,6 +94,7 @@ const CardsContent = (props: PropsType) => {
         onClose={closeModal}
       >
         <StyledCloseButton onClick={closeModal}>&times;</StyledCloseButton>
+        {userName}
         {cardsTitleEditMode ? (
           <Input
             value={modalCardTitleValue}
@@ -138,10 +135,9 @@ const CardsContent = (props: PropsType) => {
               value={descriptionValue}
               onChange={onDescriptionChange}
               onBlur={() => {
-                toggleEditMode(descriptionEditMode, setDescriptionEditMode)
-                updateDescriptionInCards(id, descriptionValue)
-              }
-              }
+                toggleEditMode(descriptionEditMode, setDescriptionEditMode);
+                updateDescriptionInCards(id, descriptionValue);
+              }}
               autoFocus
             />
           ) : descriptionValue ? (
@@ -155,28 +151,27 @@ const CardsContent = (props: PropsType) => {
           ) : (
             <StyledDescription
               onClick={() => {
-                toggleEditMode(descriptionEditMode, setDescriptionEditMode)
-              }
-              }
+                toggleEditMode(descriptionEditMode, setDescriptionEditMode);
+              }}
             >
               Add a more detailed description...
             </StyledDescription>
           )}
         </div>
         <CardsComments
+          id={id}
           commentsAmount={commentsAmount}
-          addComment={addComment}
           userName={userName}
-          onCommentChange={(e) => onCommentChange(e)}
+          addComment={addComment}
           deleteComment={deleteComment}
           updateCommentInState={updateCommentInState}
-          id={id}
+          onCommentChange={(e) => onCommentChange(e)}
         />
         <StyledButton
           type="button"
           alignSelf="flex-start"
           marginTop="10px"
-          onClick={() => deleteCard(listId,id)}
+          onClick={() => deleteCard(listId, id)}
         >
           Delete Card
         </StyledButton>

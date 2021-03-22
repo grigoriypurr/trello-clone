@@ -1,3 +1,3 @@
-import CardsContent from './CardsContent';
+export {default} from './CardsContent';
 
-export default CardsContent;
+

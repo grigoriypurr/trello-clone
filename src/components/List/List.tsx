@@ -4,63 +4,60 @@ import Cards from '../Cards';
 import { CardsType, CommentsType } from '../Board/Board';
 
 interface PropsType {
-  deleteList: (id: string) => void;
+  editMode: boolean;
   id: string;
   listName: string;
   userName: string;
-  editMode: boolean;
-  updateListNameInState: (id: string, value: string) => void;
+  cards: CardsType[];
+  comments: CommentsType[];
   addCard: (listId: string) => void;
   deleteCard: (id: string, cardId: string) => void;
-  updateCardNameInState: (id: string, value: string) => void;
-  updateCardsIdsInList: (listId: string, cardsIds: string) => void;
-  updateDescriptionInCards: (cardId: string, value: string) => void;
-  cards: CardsType[];
   addComment: (commentValue: string, cardId: string) => void;
   deleteComment: (id: string) => void;
+  deleteList: (id: string) => void;
+  updateListNameInState: (id: string, value: string) => void;
+  updateCardNameInState: (id: string, value: string) => void;
+  updateDescriptionInCards: (cardId: string, value: string) => void;
   updateCommentInState: (id: string, value: string) => void;
-  comments: CommentsType[];
 }
 
 const List = (props: PropsType) => {
   const {
-    deleteList,
-    listName,
     editMode,
     id,
+    listName,
     userName,
-    updateListNameInState,
+    cards,
+    comments,
     addCard,
     deleteCard,
-    updateCardNameInState,
-    cards,
-
-    updateDescriptionInCards,
     addComment,
     deleteComment,
+    deleteList,
+    updateListNameInState,
+    updateCardNameInState,
+    updateDescriptionInCards,
     updateCommentInState,
-    comments
-
   } = props;
 
   const filteredListsCards = cards.filter(card => card.listId === id);
 
   const [isEditMode, setEditMode] = useState(editMode);
-  const [value, setValue] = useState(listName);
+  const [inputListName, setInputListName] = useState(listName);
 
   const inputActivateEditMode = () => {
     setEditMode(true);
   };
   const inputDeactivateEditMode = () => {
-    if (!value) {
+    if (!inputListName) {
       deleteList(id);
       return;
     }
-    updateListNameInState(id, value);
+    updateListNameInState(id, inputListName);
     setEditMode(false);
   };
   const onInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(e.currentTarget.value);
+    setInputListName(e.currentTarget.value);
   };
   const handleClick = () => {
     addCard(id);
@@ -71,41 +68,39 @@ const List = (props: PropsType) => {
       {!isEditMode ? (
         <Flexbox justifyContent="space-between">
           <StyledListTitle onClick={inputActivateEditMode}>
-            {value}
+            {inputListName}
           </StyledListTitle>
           <StyledButton onClick={() => { deleteList(id); }}>&#215;</StyledButton>
         </Flexbox>
       ) : (
         <Input
-          value={value}
-          autoFocus={true}
+          value={inputListName}
           onChange={onInputChange}
           onBlur={inputDeactivateEditMode}
+          autoFocus
         />
       )}
       {filteredListsCards.map((item: CardsType) => (
         <Cards
           key={item.id}
-          cardTitle={item.cardsName}
           isEditMode={item.isEditMode}
-          deleteCard={deleteCard}
+          cardTitle={item.cardsName}
           cardId={item.id}
-          listId={id}
           userName={userName}
-          listTitle={value}
-          updateCardNameInState={updateCardNameInState}
-          updateDescriptionInCards={updateDescriptionInCards}
+          listId={id}
+          listTitle={inputListName}
           description={item.description}
+          comments={comments}
           addComment={addComment}
           deleteComment={deleteComment}
+          deleteCard={deleteCard}
+          updateCardNameInState={updateCardNameInState}
+          updateDescriptionInCards={updateDescriptionInCards}
           updateCommentInState={updateCommentInState}
-          comments={comments}
         />
       ))}
       <Flexbox justifyContent="space-between">
         <button onClick={handleClick} >Add Card</button>
-        <button >update</button>
-
       </Flexbox>
     </StyledList>
   );
