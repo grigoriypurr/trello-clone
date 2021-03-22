@@ -12,7 +12,7 @@ import {
 } from './styled';
 import { CommentsType } from '../Board/Board';
 import CardsComments from '../CardComments/CardsComments';
-import { useStateWithLocalStorage } from '../../App';
+
 
 interface PropsType {
   open: boolean;
@@ -21,7 +21,7 @@ interface PropsType {
   commentsAmount: CommentsType[];
   userName: string;
   listTitle: string;
-  deleteCard: (id: string) => void;
+  deleteCard: (id:string,cardId: string) => void;
   id: string;
   addComment: (commentValue:string, cardId:string) => void;
   onCommentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -32,7 +32,7 @@ interface PropsType {
   setcardTitleValue: React.Dispatch<React.SetStateAction<string>>;
   updateDescriptionInCards: (cardId: string, value: string) => void
   description: string
-
+  listId:string
 }
 
 const CardsContent = (props: PropsType) => {
@@ -52,8 +52,8 @@ const CardsContent = (props: PropsType) => {
     updateCardNameInState,
     setcardTitleValue,
     updateDescriptionInCards,
-    description
-
+    description,
+    listId
   } = props;
 
   const [cardsTitleEditMode, setCardsTitleEditMode] = useState(false);
@@ -176,7 +176,7 @@ const CardsContent = (props: PropsType) => {
           type="button"
           alignSelf="flex-start"
           marginTop="10px"
-          onClick={() => deleteCard(id)}
+          onClick={() => deleteCard(listId,id)}
         >
           Delete Card
         </StyledButton>

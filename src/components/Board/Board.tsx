@@ -1,7 +1,8 @@
 import List from '../List/List';
 import { StyledTables, Flexbox, StyledButton } from './styled';
 import { v1 as uuidv1 } from 'uuid';
-import { useStateWithLocalStorage } from '../../App';
+import { useStateWithLocalStorage } from '../../hooks';
+
 
 const initialLists = [
   {
@@ -10,24 +11,24 @@ const initialLists = [
     isEditMode: false,
     cardsIds: []
   },
-  // {
-  //   id: uuidv1(),
-  //   listName: 'In Progress',
-  //   isEditMode: false,
-  //   cardsIds:[]
-  // },
-  // {
-  //   id: uuidv1(),
-  //   listName: 'Testing',
-  //   isEditMode: false,
-  //   cardsIds:[]
-  // },
-  // {
-  //   id: uuidv1(),
-  //   listName: 'Done',
-  //   isEditMode: false,
-  //   cardsIds:[]
-  // },
+  {
+    id: uuidv1(),
+    listName: 'In Progress',
+    isEditMode: false,
+    cardsIds:[]
+  },
+  {
+    id: uuidv1(),
+    listName: 'Testing',
+    isEditMode: false,
+    cardsIds:[]
+  },
+  {
+    id: uuidv1(),
+    listName: 'Done',
+    isEditMode: false,
+    cardsIds:[]
+  },
 ];
 
 interface PropsType {
@@ -123,10 +124,10 @@ const Board = (props: PropsType) => {
     setCards(newCards)
   };
   //cards
-  const updateCardsIdsInList = (listId: string, cardsIds: string[]) => {
+  const updateCardsIdsInList = (listId: string, cardsIds: string) => {
     const newLists = lists.map((list: ListType) => {
       if (list.id === listId) {
-        return { ...list, cardsIds: cardsIds }
+        return { ...list, cardsIds: [...list.cardsIds,cardsIds] }
       } else {
         return list
       }
@@ -144,20 +145,29 @@ const Board = (props: PropsType) => {
     setCards(newCards)
   }
   const addCard = (listId: string) => {
+    const addedCard = { id: uuidv1(), cardsName: '', description: '', listId, isEditMode: true }
     const newCards = [
       ...cards,
-      { id: uuidv1(), cardsName: '', description: '', listId, isEditMode: true },
+      addedCard
     ];
     setCards(newCards as CardsType[]);
-
+    updateCardsIdsInList(listId,addedCard.id)
   };
-  const deleteCard = (cardId: string) => {
+  const deleteCard = (listId:string,cardId: string) => {
     const newCards = cards.filter((item: CardsType) => {
       return item.id !== cardId;
     });
     setCards(newCards);
     const newComments=comments.filter((comment:CommentsType)=>comment.cardId !== cardId)
     setComments(newComments)
+    const newLists = lists.map((list: ListType) => {
+      if (list.id === listId) {
+        return { ...list, cardsIds: [...list.cardsIds.filter(id=>id!==cardId)] }
+      } else {
+        return list
+      }
+    })
+    setLists(newLists)
   };
   const updateCardNameInState = (id: string, value: string) => {
     const updatedCards = cards.map((item: CardsType) => {

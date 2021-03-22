@@ -1,28 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { StyledCards, StyledTextarea, StyledButton } from './styled';
 import CardsContent from '../CardsContent/CardsContent';
-import { v1 as uuidv1 } from 'uuid';
-import { useStateWithLocalStorage } from '../../App';
+
+
 import { CommentsType } from '../Board/Board';
 
 interface PropsType {
   cardTitle: string;
   isEditMode: boolean;
-  deleteCard: (cardId: string) => void;
+  deleteCard: (id:string,cardId: string) => void;
   cardId: string;
   listId: string;
   userName: string;
   listTitle: string;
-  cardsIds: string[];
   updateCardNameInState: (id: string, value: string) => void;
   updateDescriptionInCards: (cardId: string, value: string) => void
   description: string;
-  updateCardsIdsInList: (listId: string, cardsIds: string[]) => void
+  
   addComment: (commentValue: string, cardId: string) => void
   deleteComment: (id: string) => void
   updateCommentInState: (id: string, value: string) => void
   comments: CommentsType[]
-
 }
 
 const Cards = (props: PropsType) => {
@@ -35,10 +33,10 @@ const Cards = (props: PropsType) => {
     listTitle,
     listId,
     updateCardNameInState,
-    cardsIds,
+   
     updateDescriptionInCards,
     description,
-    updateCardsIdsInList,
+    
     addComment,
     deleteComment,
     updateCommentInState,
@@ -59,8 +57,8 @@ const Cards = (props: PropsType) => {
 
   const deactivateEditMode = () => {
     if (!cardTitleValue) {
-      deleteCard(cardId)
-      updateCardsIdsInList(listId, cardsIds)
+      deleteCard(listId,cardId)
+      
       return
     }
     updateCardNameInState(cardId, cardTitleValue);
@@ -95,8 +93,8 @@ const Cards = (props: PropsType) => {
         >
           {cardTitleValue}
           <StyledButton onClick={() => {
-            deleteCard(cardId)
-            updateCardsIdsInList(listId, cardsIds)
+            deleteCard(listId,cardId)
+           
           }}>&#215;</StyledButton>
           {!!filteredComments.length && (
             <div>{filteredComments.length} comments</div>
@@ -121,7 +119,7 @@ const Cards = (props: PropsType) => {
         setcardTitleValue={setcardTitleValue}
         updateDescriptionInCards={updateDescriptionInCards}
         description={description}
-
+        listId={listId}
       />
     </>
   );

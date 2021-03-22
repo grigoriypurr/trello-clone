@@ -12,6 +12,7 @@ const LoginForm = (props: PropsType) => {
   const [loginValue, setLoginValue] = useState('');
 
   const closeModal = () => {
+    if (!loginValue) return;
     setUserName(loginValue);
     setOpen(false);
   };

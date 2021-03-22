@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Flexbox, Input, ClearButton } from './styled';
 
 const Header = () => {
