@@ -1,8 +1,17 @@
 import { useState } from 'react';
-import { StyledList, Flexbox, Input, StyledListTitle, StyledButton } from './styled';
+import {
+  StyledList,
+  Flexbox,
+  Input,
+  StyledListTitle,
+  StyledButton,
+} from './styled';
 import Cards from '../Cards';
 import { CardsType, CommentsType } from '../Board/Board';
+import { deleteList, updateListNameInState } from '../../redux/listsSlice';
 
+import { RootState } from '../../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
 interface PropsType {
   editMode: boolean;
   id: string;
@@ -14,8 +23,8 @@ interface PropsType {
   deleteCard: (id: string, cardId: string) => void;
   addComment: (commentValue: string, cardId: string) => void;
   deleteComment: (id: string) => void;
-  deleteList: (id: string) => void;
-  updateListNameInState: (id: string, value: string) => void;
+
+  // updateListNameInState: (id: string, value: string) => void;
   updateCardNameInState: (id: string, value: string) => void;
   updateDescriptionInCards: (cardId: string, value: string) => void;
   updateCommentInState: (id: string, value: string) => void;
@@ -33,14 +42,15 @@ const List = (props: PropsType) => {
     deleteCard,
     addComment,
     deleteComment,
-    deleteList,
-    updateListNameInState,
+    // updateListNameInState,
     updateCardNameInState,
     updateDescriptionInCards,
     updateCommentInState,
   } = props;
+  const listState = useSelector((state: RootState) => state.lists);
+  const dispatch = useDispatch();
 
-  const filteredListsCards = cards.filter(card => card.listId === id);
+  const filteredListsCards = cards.filter((card) => card.listId === id);
 
   const [isEditMode, setEditMode] = useState(editMode);
   const [inputListName, setInputListName] = useState(listName);
@@ -50,10 +60,11 @@ const List = (props: PropsType) => {
   };
   const inputDeactivateEditMode = () => {
     if (!inputListName) {
-      deleteList(id);
+      dispatch(deleteList(id));
       return;
     }
-    updateListNameInState(id, inputListName);
+    dispatch(updateListNameInState({ listId: id, value: inputListName }));
+    console.log(listState);
     setEditMode(false);
   };
   const onInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -70,7 +81,14 @@ const List = (props: PropsType) => {
           <StyledListTitle onClick={inputActivateEditMode}>
             {inputListName}
           </StyledListTitle>
-          <StyledButton onClick={() => { deleteList(id); }}>&#215;</StyledButton>
+          <StyledButton
+            onClick={() => {
+              dispatch(deleteList(id));
+              console.log(listState);
+            }}
+          >
+            &#215;
+          </StyledButton>
         </Flexbox>
       ) : (
         <Input
@@ -100,7 +118,7 @@ const List = (props: PropsType) => {
         />
       ))}
       <Flexbox justifyContent="space-between">
-        <button onClick={handleClick} >Add Card</button>
+        <button onClick={handleClick}>Add Card</button>
       </Flexbox>
     </StyledList>
   );

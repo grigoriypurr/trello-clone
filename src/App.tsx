@@ -3,9 +3,10 @@ import LoginForm from './components/LoginForm';
 import Board from './components/Board';
 import { StyledApp } from './styled';
 import { useStateWithLocalStorage } from './hooks';
+import { useState } from 'react';
 
 const App = () => {
-  const [userName, setUserName] = useStateWithLocalStorage('', 'userName');
+  const [userName, setUserName] = useState('');
 
   return (
     <StyledApp>

@@ -2,32 +2,35 @@ import List from '../List';
 import { StyledTables, Flexbox, StyledButton } from './styled';
 import { v1 as uuidv1 } from 'uuid';
 import { useStateWithLocalStorage } from '../../hooks';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { addList } from '../../redux/listsSlice';
+import { useState } from 'react';
+import { RootState } from '../../redux/store';
 
 const initialLists = [
   {
     id: uuidv1(),
     listName: 'TODO',
     isEditMode: false,
-    cardsIds: []
+    cardsIds: [],
   },
   {
     id: uuidv1(),
     listName: 'In Progress',
     isEditMode: false,
-    cardsIds: []
+    cardsIds: [],
   },
   {
     id: uuidv1(),
     listName: 'Testing',
     isEditMode: false,
-    cardsIds: []
+    cardsIds: [],
   },
   {
     id: uuidv1(),
     listName: 'Done',
     isEditMode: false,
-    cardsIds: []
+    cardsIds: [],
   },
 ];
 
@@ -55,18 +58,12 @@ export interface CardsType {
 }
 
 const Board = (props: PropsType) => {
-  const [lists, setLists] = useStateWithLocalStorage(
-    initialLists,
-    'Lists'
-  );
-  const [comments, setComments] = useStateWithLocalStorage(
-    [],
-    'Comments'
-  );
-  const [cards, setCards] = useStateWithLocalStorage(
-    [],
-    'Cards'
-  );
+  const listState = useSelector((state: RootState) => state.lists);
+  const dispatch = useDispatch();
+
+  const [lists, setLists] = useState(listState);
+  const [comments, setComments] = useStateWithLocalStorage([], 'Comments');
+  const [cards, setCards] = useStateWithLocalStorage([], 'Cards');
   // comments
   const updateCommentInState = (id: string, value: string) => {
     const updatedComments = comments.map((item: CommentsType) => {
@@ -93,44 +90,49 @@ const Board = (props: PropsType) => {
     setComments(newComments);
   };
   //lists
-  const updateListNameInState = (listId: string, value: string) => {
-    const updatedLists = lists.map((item: ListType) => {
-      if (item.id === listId) {
-        return { ...item, listName: value, isEditMode: false };
-      } else {
-        return item;
-      }
-    });
-    setLists(updatedLists);
-  };
-  const addList = () => {
-    const newLists = [
-      ...lists,
-      { id: uuidv1(), listName: '', isEditMode: true, cardsIds: [] },
-    ];
-    setLists(newLists as ListType[]);
-  };
-  const deleteList = (id: string) => {
+  // const updateListNameInState = (listId: string, value: string) => {
+  //   const updatedLists = lists.map((item: ListType) => {
+  //     if (item.id === listId) {
+  //       return { ...item, listName: value, isEditMode: false };
+  //     } else {
+  //       return item;
+  //     }
+  //   });
+  //   //@ts-ignore
+  //   setLists(updatedLists);
+  // };
+  // const addList = () => {
+  //   const newLists = [
+  //     ...lists,
+  //     { id: uuidv1(), listName: '', isEditMode: true, cardsIds: [] },
+  //   ];
+  //   setLists(newLists as ListType[]);
+  // };
+  // const deleteList = (id: string) => {
+  //   const deletedList = lists.filter((item) => item.id === id);
+  //   const newComments = comments.filter(
+  //     //@ts-ignore
+  //     (comment) => !deletedList[0].cardsIds.includes(comment.cardId)
+  //   );
+  //   setComments(newComments);
+  //   const newList = lists.filter((item: ListType) => {
+  //     return item.id !== id;
+  //   });
+  //   setLists(newList);
+  //   const newCards = cards.filter((card: CardsType) => card.listId !== id);
+  //   setCards(newCards);
+  // };
 
-    const deletedList = lists.filter((item: ListType) => item.id === id);
-    const newComments = comments.filter((comment: CommentsType) => !deletedList[0].cardsIds.includes(comment.cardId));
-    setComments(newComments);
-    const newList = lists.filter((item: ListType) => {
-      return item.id !== id;
-    });
-    setLists(newList);
-    const newCards = cards.filter((card: CardsType) => card.listId !== id);
-    setCards(newCards);
-  };
   //cards
   const updateCardsIdsInList = (listId: string, cardsIds: string) => {
-    const newLists = lists.map((list: ListType) => {
+    const newLists = lists.map((list) => {
       if (list.id === listId) {
         return { ...list, cardsIds: [...list.cardsIds, cardsIds] };
       } else {
         return list;
       }
     });
+    //@ts-ignore
     setLists(newLists);
   };
   const updateDescriptionInCards = (cardId: string, value: string) => {
@@ -144,11 +146,14 @@ const Board = (props: PropsType) => {
     setCards(newCards);
   };
   const addCard = (listId: string) => {
-    const addedCard = { id: uuidv1(), cardsName: '', description: '', listId, isEditMode: true };
-    const newCards = [
-      ...cards,
-      addedCard
-    ];
+    const addedCard = {
+      id: uuidv1(),
+      cardsName: '',
+      description: '',
+      listId,
+      isEditMode: true,
+    };
+    const newCards = [...cards, addedCard];
     setCards(newCards as CardsType[]);
     updateCardsIdsInList(listId, addedCard.id);
   };
@@ -157,11 +162,16 @@ const Board = (props: PropsType) => {
       return item.id !== cardId;
     });
     setCards(newCards);
-    const newComments = comments.filter((comment: CommentsType) => comment.cardId !== cardId);
+    const newComments = comments.filter(
+      (comment: CommentsType) => comment.cardId !== cardId
+    );
     setComments(newComments);
-    const newLists = lists.map((list: ListType) => {
+    const newLists = lists.map((list) => {
       if (list.id === listId) {
-        return { ...list, cardsIds: [...list.cardsIds.filter(id => id !== cardId)] };
+        return {
+          ...list,
+          cardsIds: [...list.cardsIds.filter((id) => id !== cardId)],
+        };
       } else {
         return list;
       }
@@ -182,7 +192,7 @@ const Board = (props: PropsType) => {
   return (
     <StyledTables>
       <Flexbox>
-        {lists.map((item: ListType) => (
+        {listState.map((item: ListType) => (
           <List
             key={item.id}
             editMode={item.isEditMode}
@@ -195,15 +205,21 @@ const Board = (props: PropsType) => {
             deleteComment={deleteComment}
             addCard={addCard}
             deleteCard={deleteCard}
-            deleteList={deleteList}
-            updateListNameInState={updateListNameInState}
+            // updateListNameInState={updateListNameInState}
             updateCardNameInState={updateCardNameInState}
             updateDescriptionInCards={updateDescriptionInCards}
             updateCommentInState={updateCommentInState}
           />
         ))}
         <StyledButton>
-          <button onClick={addList}>+ Add another list</button>
+          <button
+            onClick={() => {
+              dispatch(addList());
+              console.log(listState);
+            }}
+          >
+            + Add another list
+          </button>
         </StyledButton>
       </Flexbox>
     </StyledTables>
