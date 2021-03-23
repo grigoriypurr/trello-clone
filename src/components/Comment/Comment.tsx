@@ -1,23 +1,19 @@
 import { useState } from 'react';
+import { deleteComment, updateComment } from '../../redux/commentsSlice';
 import { StyledComment, StyledDiv, Input, StyledButton } from './styled';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 interface PropsType {
   userName: string;
   commentValue: string;
   commentId: string;
-  deleteComment: (id: string) => void;
-  updateCommentInState: (id: string, value: string) => void;
+  listId: string;
+  cardId: string;
 }
 
 const Comment = (props: PropsType) => {
-  const {
-    userName,
-    commentValue,
-    commentId,
-    deleteComment,
-    updateCommentInState,
-  } = props;
-
+  const { userName, commentValue, commentId, listId, cardId } = props;
+  const dispatch = useDispatch();
   const [editMode, setEditMode] = useState(false);
   const [inputValue, setInputValue] = useState(commentValue);
 
@@ -25,7 +21,7 @@ const Comment = (props: PropsType) => {
     setEditMode(true);
   };
   const deactivateEditMode = () => {
-    updateCommentInState(commentId, inputValue);
+    dispatch(updateComment({ commentId, value: inputValue }));
     setEditMode(false);
   };
   const onInputValueChange = (
@@ -54,7 +50,9 @@ const Comment = (props: PropsType) => {
       </StyledComment>
       {!editMode && (
         <div>
-          <button onClick={() => deleteComment(commentId)}>delete</button>
+          <button onClick={() => dispatch(deleteComment(commentId))}>
+            delete
+          </button>
           <button onClick={activateEditMode}>edit</button>
         </div>
       )}

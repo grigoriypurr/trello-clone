@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { StyledCards, StyledTextarea, StyledButton } from './styled';
 import CardsContent from '../CardsContent';
-import { CommentsType } from '../Board/Board';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { deleteCard, updateCardName } from '../../redux/cardsSlice';
 
 interface PropsType {
   isEditMode: boolean;
@@ -11,13 +13,6 @@ interface PropsType {
   userName: string;
   listTitle: string;
   description: string;
-  comments: CommentsType[];
-  addComment: (commentValue: string, cardId: string) => void;
-  deleteComment: (id: string) => void;
-  deleteCard: (id: string, cardId: string) => void;
-  updateCardNameInState: (id: string, value: string) => void;
-  updateDescriptionInCards: (cardId: string, value: string) => void;
-  updateCommentInState: (id: string, value: string) => void;
 }
 
 const Cards = (props: PropsType) => {
@@ -29,16 +24,13 @@ const Cards = (props: PropsType) => {
     userName,
     listTitle,
     description,
-    comments,
-    addComment,
-    deleteComment,
-    deleteCard,
-    updateCardNameInState,
-    updateDescriptionInCards,
-    updateCommentInState,
   } = props;
+  const dispatch = useDispatch();
+  const comments = useSelector((state: RootState) => state.comments);
+  const filteredComments = comments.filter(
+    (comment) => comment.cardId === cardId
+  );
 
-  const filteredComments = comments.filter((comment: CommentsType) => comment.cardId === cardId);
   const [editMode, setEditMode] = useState(isEditMode);
   const [cardTitleValue, setCardTitleValue] = useState(cardTitle);
   const [commentValue, setCommentValue] = useState('');
@@ -48,10 +40,10 @@ const Cards = (props: PropsType) => {
 
   const deactivateEditMode = () => {
     if (!cardTitleValue) {
-      deleteCard(listId, cardId);
+      dispatch(deleteCard({ listId, cardId }));
       return;
     }
-    updateCardNameInState(cardId, cardTitleValue);
+    dispatch(updateCardName({ cardId, value: cardTitleValue }));
     setEditMode(false);
   };
   const onTextareaChange = (
@@ -73,13 +65,15 @@ const Cards = (props: PropsType) => {
           autoFocus
         />
       ) : (
-        <StyledCards
-          onClick={() => setIsOpen((o) => !o)}
-        >
+        <StyledCards onClick={() => setIsOpen((o) => !o)}>
           {cardTitleValue}
-          <StyledButton onClick={() => {
-            deleteCard(listId, cardId);
-          }}>&#215;</StyledButton>
+          <StyledButton
+            onClick={() => {
+              dispatch(deleteCard({ listId, cardId }));
+            }}
+          >
+            &#215;
+          </StyledButton>
           {!!filteredComments.length && (
             <div>{filteredComments.length} comments</div>
           )}
@@ -87,7 +81,7 @@ const Cards = (props: PropsType) => {
       )}
       <CardsContent
         open={isOpen}
-        id={cardId}
+        cardId={cardId}
         listId={listId}
         cardTitle={cardTitle}
         userName={userName}
@@ -95,14 +89,8 @@ const Cards = (props: PropsType) => {
         listTitle={listTitle}
         description={description}
         closeModal={closeModal}
-        addComment={addComment}
-        deleteComment={deleteComment}
-        deleteCard={deleteCard}
         onCommentChange={(event) => onCommentChange(event)}
         setCardTitleValue={setCardTitleValue}
-        updateCommentInState={updateCommentInState}
-        updateCardNameInState={updateCardNameInState}
-        updateDescriptionInCards={updateDescriptionInCards}
       />
     </>
   );

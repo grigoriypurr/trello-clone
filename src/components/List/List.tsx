@@ -7,9 +7,8 @@ import {
   StyledButton,
 } from './styled';
 import Cards from '../Cards';
-import { CardsType, CommentsType } from '../Board/Board';
 import { deleteList, updateListNameInState } from '../../redux/listsSlice';
-
+import { addCard } from '../../redux/cardsSlice';
 import { RootState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 interface PropsType {
@@ -17,37 +16,12 @@ interface PropsType {
   id: string;
   listName: string;
   userName: string;
-  cards: CardsType[];
-  comments: CommentsType[];
-  addCard: (listId: string) => void;
-  deleteCard: (id: string, cardId: string) => void;
-  addComment: (commentValue: string, cardId: string) => void;
-  deleteComment: (id: string) => void;
-
-  // updateListNameInState: (id: string, value: string) => void;
-  updateCardNameInState: (id: string, value: string) => void;
-  updateDescriptionInCards: (cardId: string, value: string) => void;
-  updateCommentInState: (id: string, value: string) => void;
+  cardsIds: string[];
 }
 
 const List = (props: PropsType) => {
-  const {
-    editMode,
-    id,
-    listName,
-    userName,
-    cards,
-    comments,
-    addCard,
-    deleteCard,
-    addComment,
-    deleteComment,
-    // updateListNameInState,
-    updateCardNameInState,
-    updateDescriptionInCards,
-    updateCommentInState,
-  } = props;
-  const listState = useSelector((state: RootState) => state.lists);
+  const { editMode, id, listName, userName, cardsIds } = props;
+  const cards = useSelector((state: RootState) => state.cards);
   const dispatch = useDispatch();
 
   const filteredListsCards = cards.filter((card) => card.listId === id);
@@ -64,14 +38,14 @@ const List = (props: PropsType) => {
       return;
     }
     dispatch(updateListNameInState({ listId: id, value: inputListName }));
-    console.log(listState);
+
     setEditMode(false);
   };
   const onInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputListName(e.currentTarget.value);
   };
   const handleClick = () => {
-    addCard(id);
+    dispatch(addCard(id));
   };
 
   return (
@@ -84,7 +58,6 @@ const List = (props: PropsType) => {
           <StyledButton
             onClick={() => {
               dispatch(deleteList(id));
-              console.log(listState);
             }}
           >
             &#215;
@@ -98,7 +71,7 @@ const List = (props: PropsType) => {
           autoFocus
         />
       )}
-      {filteredListsCards.map((item: CardsType) => (
+      {filteredListsCards.map((item) => (
         <Cards
           key={item.id}
           isEditMode={item.isEditMode}
@@ -108,13 +81,6 @@ const List = (props: PropsType) => {
           listId={id}
           listTitle={inputListName}
           description={item.description}
-          comments={comments}
-          addComment={addComment}
-          deleteComment={deleteComment}
-          deleteCard={deleteCard}
-          updateCardNameInState={updateCardNameInState}
-          updateDescriptionInCards={updateDescriptionInCards}
-          updateCommentInState={updateCommentInState}
         />
       ))}
       <Flexbox justifyContent="space-between">

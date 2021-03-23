@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v1 as uuidv1 } from 'uuid';
+import { deleteList } from './listsSlice';
 
 export interface CardsType {
   isEditMode: boolean;
@@ -65,10 +66,12 @@ export const cardsSlice = createSlice({
       return newCards;
     },
   },
-  // extraReducers:(builder)=>{
-  //   builder.addCase()
-
-  // }
+  // extraReducers: (builder) => {
+  //   builder.addCase(deleteList, (state, action: PayloadAction<string>) => {
+  //     const newCards = state.filter((card) => card.listId !== action.payload);
+  //     return newCards;
+  //   });
+  // },
 });
 
 export const {

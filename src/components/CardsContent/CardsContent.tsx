@@ -10,8 +10,16 @@ import {
   StyledSpan,
   StyledSpanWithUnderline,
 } from './styled';
-import { CommentsType } from '../Board/Board';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+
 import CardsComments from '../CardComments';
+import { CommentsType } from '../../redux/commentsSlice';
+import {
+  deleteCard,
+  updateCardName,
+  updateDescriptionInCard,
+} from '../../redux/cardsSlice';
 
 interface PropsType {
   open: boolean;
@@ -19,16 +27,10 @@ interface PropsType {
   cardTitle: string;
   userName: string;
   listTitle: string;
-  id: string;
+  cardId: string;
   listId: string;
   commentsAmount: CommentsType[];
   closeModal: () => void;
-  addComment: (commentValue: string, cardId: string) => void;
-  deleteComment: (id: string) => void;
-  deleteCard: (id: string, cardId: string) => void;
-  updateCommentInState: (id: string, value: string) => void;
-  updateCardNameInState: (id: string, value: string) => void;
-  updateDescriptionInCards: (cardId: string, value: string) => void;
   onCommentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   setCardTitleValue: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -40,26 +42,20 @@ const CardsContent = (props: PropsType) => {
     cardTitle,
     userName,
     listTitle,
-    id,
+    cardId,
     listId,
     commentsAmount,
     closeModal,
-    addComment,
-    deleteComment,
-    deleteCard,
-    updateCommentInState,
-    updateCardNameInState,
-    updateDescriptionInCards,
     onCommentChange,
     setCardTitleValue,
   } = props;
 
+  const dispatch = useDispatch();
+
   const [cardsTitleEditMode, setCardsTitleEditMode] = useState(false);
   const [modalCardTitleValue, setModalCardTitleValue] = useState(cardTitle);
   const [descriptionEditMode, setDescriptionEditMode] = useState(false);
-  const [descriptionValue, setDescriptionValue] = useState(
-    description
-  );
+  const [descriptionValue, setDescriptionValue] = useState(description);
 
   useEffect(() => {
     setModalCardTitleValue(cardTitle);
@@ -79,8 +75,8 @@ const CardsContent = (props: PropsType) => {
   const onDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescriptionValue(e.currentTarget.value);
   };
-  const handleInputOnBlur = (id: string, cardTitleValue: string) => {
-    updateCardNameInState(id, cardTitleValue);
+  const handleInputOnBlur = (cardId: string, cardTitleValue: string) => {
+    dispatch(updateCardName({ cardId, value: cardTitleValue }));
     setCardTitleValue(cardTitleValue);
     toggleEditMode(cardsTitleEditMode, setCardsTitleEditMode);
   };
@@ -99,7 +95,7 @@ const CardsContent = (props: PropsType) => {
           <Input
             value={modalCardTitleValue}
             onChange={(event) => onTextareaChange(event)}
-            onBlur={() => handleInputOnBlur(id, modalCardTitleValue)}
+            onBlur={() => handleInputOnBlur(cardId, modalCardTitleValue)}
             autoFocus
           />
         ) : (
@@ -136,7 +132,9 @@ const CardsContent = (props: PropsType) => {
               onChange={onDescriptionChange}
               onBlur={() => {
                 toggleEditMode(descriptionEditMode, setDescriptionEditMode);
-                updateDescriptionInCards(id, descriptionValue);
+                dispatch(
+                  updateDescriptionInCard({ cardId, value: descriptionValue })
+                );
               }}
               autoFocus
             />
@@ -159,19 +157,17 @@ const CardsContent = (props: PropsType) => {
           )}
         </div>
         <CardsComments
-          id={id}
+          listId={listId}
+          cardId={cardId}
           commentsAmount={commentsAmount}
           userName={userName}
-          addComment={addComment}
-          deleteComment={deleteComment}
-          updateCommentInState={updateCommentInState}
           onCommentChange={(e) => onCommentChange(e)}
         />
         <StyledButton
           type="button"
           alignSelf="flex-start"
           marginTop="10px"
-          onClick={() => deleteCard(listId, id)}
+          onClick={() => dispatch(deleteCard({ listId, cardId }))}
         >
           Delete Card
         </StyledButton>

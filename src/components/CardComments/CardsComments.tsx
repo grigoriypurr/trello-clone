@@ -1,28 +1,21 @@
 import { Input, StyledComment, StyledButton } from './styled';
-import { CommentsType } from '../Board/Board';
+
 import { useState } from 'react';
 import Comment from '../Comment';
-
+import { addComment, CommentsType } from '../../redux/commentsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 interface PropsType {
+  listId: string;
   userName: string;
-  id:string
+  cardId: string;
   commentsAmount: CommentsType[];
-  addComment: (commentValue:string, cardId:string) => void;
-  deleteComment: (id: string) => void;
-  updateCommentInState: (id: string, value: string) => void;
   onCommentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 const CardsComments = (props: PropsType) => {
-  const {
-    userName,
-    id,
-    commentsAmount,
-    addComment,
-    deleteComment,
-    updateCommentInState,
-    onCommentChange,
-  } = props;
+  const { listId, userName, cardId, commentsAmount, onCommentChange } = props;
+  const dispatch = useDispatch();
 
   const [newCommenteditMode, setEditMode] = useState(false);
   const [inputValue, setInputvalue] = useState('');
@@ -32,7 +25,7 @@ const CardsComments = (props: PropsType) => {
   };
   const handleClick = () => {
     setEditMode(false);
-    addComment(inputValue,id);
+    dispatch(addComment({ cardId, listId, commentValue: inputValue }));
     setInputvalue('');
   };
   const onInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -61,8 +54,8 @@ const CardsComments = (props: PropsType) => {
           userName={userName}
           commentId={item.id}
           commentValue={item.description}
-          deleteComment={deleteComment}
-          updateCommentInState={updateCommentInState}
+          cardId={cardId}
+          listId={listId}
         />
       ))}
     </div>

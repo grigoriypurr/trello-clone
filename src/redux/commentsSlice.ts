@@ -57,7 +57,7 @@ export const commentsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(deleteList, (state, action: PayloadAction<string>) => {
       const newComments = state.filter((item) => {
-        return item.id !== action.payload;
+        return item.listId !== action.payload;
       });
       return newComments;
     });
@@ -65,7 +65,7 @@ export const commentsSlice = createSlice({
       deleteCard,
       (state, action: PayloadAction<{ listId: string; cardId: string }>) => {
         const newComments = state.filter((item) => {
-          return item.id !== action.payload.cardId;
+          return item.cardId !== action.payload.cardId;
         });
         return newComments;
       }
