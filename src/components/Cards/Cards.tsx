@@ -26,7 +26,9 @@ const Cards = (props: PropsType) => {
     description,
   } = props;
   const dispatch = useDispatch();
-  const comments = useSelector((state: RootState) => state.comments);
+  const comments = useSelector(
+    (state: RootState) => state.persistedReducer.comments
+  );
   const filteredComments = comments.filter(
     (comment) => comment.cardId === cardId
   );

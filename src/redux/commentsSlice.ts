@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v1 as uuidv1 } from 'uuid';
-import { deleteList } from './listsSlice';
+import { deleteList } from './commonActions';
 import { deleteCard } from './cardsSlice';
 
 export interface CommentsType {

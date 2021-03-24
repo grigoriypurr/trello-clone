@@ -1,18 +1,15 @@
 import { useState } from 'react';
 import { deleteComment, updateComment } from '../../redux/commentsSlice';
 import { StyledComment, StyledDiv, Input, StyledButton } from './styled';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
+import { useDispatch } from 'react-redux';
 interface PropsType {
   userName: string;
   commentValue: string;
   commentId: string;
-  listId: string;
-  cardId: string;
 }
 
 const Comment = (props: PropsType) => {
-  const { userName, commentValue, commentId, listId, cardId } = props;
+  const { userName, commentValue, commentId } = props;
   const dispatch = useDispatch();
   const [editMode, setEditMode] = useState(false);
   const [inputValue, setInputValue] = useState(commentValue);

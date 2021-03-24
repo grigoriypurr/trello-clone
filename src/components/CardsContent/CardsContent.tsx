@@ -10,9 +10,7 @@ import {
   StyledSpan,
   StyledSpanWithUnderline,
 } from './styled';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
-
+import { useDispatch } from 'react-redux';
 import CardsComments from '../CardComments';
 import { CommentsType } from '../../redux/commentsSlice';
 import {

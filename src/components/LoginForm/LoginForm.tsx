@@ -11,9 +11,11 @@ interface PropsType {
 const LoginForm = (props: PropsType) => {
   const { setUserName } = props;
 
-  const userName = useSelector((state: RootState) => state.user);
+  const userName = useSelector(
+    (state: RootState) => state.persistedReducer.user
+  );
   const [open, setOpen] = useState(true);
-  const [loginValue, setLoginValue] = useState(userName);
+  const [loginValue, setLoginValue] = useState('');
 
   const dispatch = useDispatch();
   const closeModal = () => {

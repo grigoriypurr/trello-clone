@@ -7,7 +7,8 @@ import {
   StyledButton,
 } from './styled';
 import Cards from '../Cards';
-import { deleteList, updateListNameInState } from '../../redux/listsSlice';
+import { updateListNameInState } from '../../redux/listsSlice';
+import { deleteList } from '../../redux/commonActions';
 import { addCard } from '../../redux/cardsSlice';
 import { RootState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,7 +22,7 @@ interface PropsType {
 
 const List = (props: PropsType) => {
   const { editMode, id, listName, userName, cardsIds } = props;
-  const cards = useSelector((state: RootState) => state.cards);
+  const cards = useSelector((state: RootState) => state.persistedReducer.cards);
   const dispatch = useDispatch();
 
   const filteredListsCards = cards.filter((card) => card.listId === id);

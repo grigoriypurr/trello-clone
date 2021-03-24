@@ -1,10 +1,8 @@
 import { Input, StyledComment, StyledButton } from './styled';
-
 import { useState } from 'react';
 import Comment from '../Comment';
 import { addComment, CommentsType } from '../../redux/commentsSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
+import { useDispatch } from 'react-redux';
 interface PropsType {
   listId: string;
   userName: string;
@@ -54,8 +52,6 @@ const CardsComments = (props: PropsType) => {
           userName={userName}
           commentId={item.id}
           commentValue={item.description}
-          cardId={cardId}
-          listId={listId}
         />
       ))}
     </div>

@@ -2,7 +2,6 @@ import Header from './components/Header';
 import LoginForm from './components/LoginForm';
 import Board from './components/Board';
 import { StyledApp } from './styled';
-import { useStateWithLocalStorage } from './hooks';
 import { useState } from 'react';
 
 const App = () => {

@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v1 as uuidv1 } from 'uuid';
 import { addCard, deleteCard } from './cardsSlice';
+import { deleteList } from './commonActions';
+import { CardsType } from './cardsSlice';
 
 export const listsSlice = createSlice({
   name: 'lists',
@@ -39,10 +41,6 @@ export const listsSlice = createSlice({
         cardsIds: [],
       });
     },
-    deleteList: (state, action: PayloadAction<string>) => {
-      const newListArray = state.filter((item) => item.id !== action.payload);
-      return newListArray;
-    },
     updateListNameInState: (
       state,
       action: PayloadAction<{ listId: string; value: string }>
@@ -58,10 +56,10 @@ export const listsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(addCard, (state, action: PayloadAction<string>) => {
+    builder.addCase(addCard, (state, action: PayloadAction<CardsType>) => {
       const newLists = state.map((item) => {
-        if (item.id === action.payload) {
-          return { ...item, cardsIds: [...item.cardsIds, action.payload] };
+        if (item.id === action.payload.listId) {
+          return { ...item, cardsIds: [...item.cardsIds, action.payload.id] };
         } else return item;
       });
       return newLists;
@@ -84,13 +82,13 @@ export const listsSlice = createSlice({
         return newList;
       }
     );
+    builder.addCase(deleteList, (state, action: PayloadAction<string>) => {
+      const newListArray = state.filter((item) => item.id !== action.payload);
+      return newListArray;
+    });
   },
 });
 
-export const {
-  addList,
-  deleteList,
-  updateListNameInState,
-} = listsSlice.actions;
+export const { addList, updateListNameInState } = listsSlice.actions;
 
 export default listsSlice.reducer;
