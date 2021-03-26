@@ -1,14 +1,13 @@
 import List from '../List';
 import { StyledTables, Flexbox, StyledButton } from './styled';
-import { useSelector, useDispatch } from 'react-redux';
-import { addList } from '../../redux/listsSlice';
-import { RootState } from '../../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { addList, selectLists } from '../../redux/listsSlice';
 interface PropsType {
   userName: string;
 }
 
-const Board = (props: PropsType) => {
-  const lists = useSelector((state: RootState) => state.persistedReducer.lists);
+const Board: React.FC<PropsType> = ({ userName }) => {
+  const lists = useSelector(selectLists);
   const dispatch = useDispatch();
 
   return (
@@ -21,7 +20,7 @@ const Board = (props: PropsType) => {
             listName={item.listName}
             id={item.id}
             cardsIds={item.cardsIds}
-            userName={props.userName}
+            userName={userName}
           />
         ))}
         <StyledButton>

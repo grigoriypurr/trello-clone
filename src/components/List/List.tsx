@@ -9,8 +9,7 @@ import {
 import Cards from '../Cards';
 import { updateListNameInState } from '../../redux/listsSlice';
 import { deleteList } from '../../redux/commonActions';
-import { addCard } from '../../redux/cardsSlice';
-import { RootState } from '../../redux/store';
+import { addCard, selectCards } from '../../redux/cardsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 interface PropsType {
   editMode: boolean;
@@ -20,15 +19,12 @@ interface PropsType {
   cardsIds: string[];
 }
 
-const List = (props: PropsType) => {
-  const { editMode, id, listName, userName, cardsIds } = props;
-  const cards = useSelector((state: RootState) => state.persistedReducer.cards);
-  const dispatch = useDispatch();
-
-  const filteredListsCards = cards.filter((card) => card.listId === id);
-
+const List: React.FC<PropsType> = ({ editMode, id, listName, userName }) => {
   const [isEditMode, setEditMode] = useState(editMode);
   const [inputListName, setInputListName] = useState(listName);
+
+  const filteredListsCards = useSelector(selectCards(id));
+  const dispatch = useDispatch();
 
   const inputActivateEditMode = () => {
     setEditMode(true);
@@ -72,7 +68,7 @@ const List = (props: PropsType) => {
           autoFocus
         />
       )}
-      {filteredListsCards.map((item) => (
+      {filteredListsCards.map((item: any) => (
         <Cards
           key={item.id}
           isEditMode={item.isEditMode}

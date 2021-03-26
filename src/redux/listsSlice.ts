@@ -3,6 +3,7 @@ import { v1 as uuidv1 } from 'uuid';
 import { addCard, deleteCard } from './cardsSlice';
 import { deleteList } from './commonActions';
 import { CardsType } from './cardsSlice';
+import { RootState } from './store';
 
 export const listsSlice = createSlice({
   name: 'lists',
@@ -45,29 +46,27 @@ export const listsSlice = createSlice({
       state,
       action: PayloadAction<{ listId: string; value: string }>
     ) => {
-      const updatedLists = state.map((item) => {
+      return state.map((item) => {
         if (item.id === action.payload.listId) {
           return { ...item, listName: action.payload.value, isEditMode: false };
         } else {
           return item;
         }
       });
-      return updatedLists;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(addCard, (state, action: PayloadAction<CardsType>) => {
-      const newLists = state.map((item) => {
+      return state.map((item) => {
         if (item.id === action.payload.listId) {
           return { ...item, cardsIds: [...item.cardsIds, action.payload.id] };
         } else return item;
       });
-      return newLists;
     });
     builder.addCase(
       deleteCard,
       (state, action: PayloadAction<{ listId: string; cardId: string }>) => {
-        const newList = state.map((list) => {
+        return state.map((list) => {
           if (list.id === action.payload.listId) {
             return {
               ...list,
@@ -79,15 +78,15 @@ export const listsSlice = createSlice({
             };
           } else return list;
         });
-        return newList;
       }
     );
     builder.addCase(deleteList, (state, action: PayloadAction<string>) => {
-      const newListArray = state.filter((item) => item.id !== action.payload);
-      return newListArray;
+      return state.filter((item) => item.id !== action.payload);
     });
   },
 });
+
+export const selectLists = (state: RootState) => state.persistedReducer.lists;
 
 export const { addList, updateListNameInState } = listsSlice.actions;
 

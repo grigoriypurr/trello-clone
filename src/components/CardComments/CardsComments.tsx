@@ -8,15 +8,18 @@ interface PropsType {
   userName: string;
   cardId: string;
   commentsAmount: CommentsType[];
-  onCommentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-const CardsComments = (props: PropsType) => {
-  const { listId, userName, cardId, commentsAmount, onCommentChange } = props;
-  const dispatch = useDispatch();
-
-  const [newCommenteditMode, setEditMode] = useState(false);
+const CardsComments: React.FC<PropsType> = ({
+  listId,
+  userName,
+  cardId,
+  commentsAmount,
+}) => {
+  const [newCommentEditMode, setEditMode] = useState(false);
   const [inputValue, setInputvalue] = useState('');
+
+  const dispatch = useDispatch();
 
   const activateEditMode = () => {
     setEditMode(true);
@@ -28,7 +31,6 @@ const CardsComments = (props: PropsType) => {
   };
   const onInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputvalue(event.currentTarget.value);
-    onCommentChange(event);
   };
 
   return (
@@ -42,7 +44,7 @@ const CardsComments = (props: PropsType) => {
           onChange={onInputChange}
           autoFocus
         />
-        {newCommenteditMode && (
+        {newCommentEditMode && (
           <StyledButton onClick={handleClick}>Save</StyledButton>
         )}
       </StyledComment>

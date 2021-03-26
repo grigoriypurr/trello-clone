@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v1 as uuidv1 } from 'uuid';
 import { deleteList } from './commonActions';
 import { deleteCard } from './cardsSlice';
+import { RootState } from './store';
 
 export interface CommentsType {
   id: string;
@@ -22,56 +23,52 @@ export const commentsSlice = createSlice({
         commentValue: string;
       }>
     ) => {
-      if (!action.payload.commentValue) return;
-      const newComments = [
-        ...state,
-        {
-          id: uuidv1(),
-          description: action.payload.commentValue,
-          cardId: action.payload.cardId,
-          listId: action.payload.listId,
-        },
-      ];
-      return newComments;
+      state.push({
+        id: uuidv1(),
+        description: action.payload.commentValue,
+        cardId: action.payload.cardId,
+        listId: action.payload.listId,
+      });
     },
     deleteComment: (state, action: PayloadAction<string>) => {
-      const newComments = state.filter((item) => {
+      return state.filter((item) => {
         return item.id !== action.payload;
       });
-      return newComments;
     },
     updateComment: (
       state,
       action: PayloadAction<{ commentId: string; value: string }>
     ) => {
-      const updatedComments = state.map((item) => {
+      return state.map((item) => {
         if (item.id === action.payload.commentId) {
           return { ...item, description: action.payload.value };
         } else {
           return item;
         }
       });
-      return updatedComments;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(deleteList, (state, action: PayloadAction<string>) => {
-      const newComments = state.filter((item) => {
+      return state.filter((item) => {
         return item.listId !== action.payload;
       });
-      return newComments;
     });
     builder.addCase(
       deleteCard,
       (state, action: PayloadAction<{ listId: string; cardId: string }>) => {
-        const newComments = state.filter((item) => {
+        return state.filter((item) => {
           return item.cardId !== action.payload.cardId;
         });
-        return newComments;
       }
     );
   },
 });
+
+export const selectComments = (id: string) => {
+  return (state: RootState) =>
+    state.persistedReducer.comments.filter((comment) => comment.cardId === id);
+};
 
 export const {
   addComment,

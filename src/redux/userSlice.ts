@@ -5,7 +5,6 @@ export const userSlice = createSlice({
   initialState: '',
   reducers: {
     getUserName: (state, action: PayloadAction<string>) => {
-      if (!action.payload) return;
       return (state = action.payload);
     },
   },

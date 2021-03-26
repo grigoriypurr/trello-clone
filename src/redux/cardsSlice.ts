@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v1 as uuidv1 } from 'uuid';
 import { deleteList } from './commonActions';
+import { RootState } from './store';
 
 export interface CardsType {
   isEditMode: boolean;
@@ -35,16 +36,15 @@ export const cardsSlice = createSlice({
       state,
       action: PayloadAction<{ listId: string; cardId: string }>
     ) => {
-      const newCards = state.filter((card) => {
+      return state.filter((card) => {
         return card.id !== action.payload.cardId;
       });
-      return newCards;
     },
     updateCardName: (
       state,
       action: PayloadAction<{ cardId: string; value: string }>
     ) => {
-      const updatedCards = state.map((item) => {
+      return state.map((item) => {
         if (item.id === action.payload.cardId) {
           return {
             ...item,
@@ -55,29 +55,30 @@ export const cardsSlice = createSlice({
           return item;
         }
       });
-      return updatedCards;
     },
     updateDescriptionInCard: (
       state,
       action: PayloadAction<{ cardId: string; value: string }>
     ) => {
-      const newCards = state.map((card) => {
+      return state.map((card) => {
         if (card.id === action.payload.cardId) {
           return { ...card, description: action.payload.value };
         } else {
           return card;
         }
       });
-      return newCards;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(deleteList, (state, action: PayloadAction<string>) => {
-      const newCards = state.filter((card) => card.listId !== action.payload);
-      return newCards;
+      return state.filter((card) => card.listId !== action.payload);
     });
   },
 });
+export const selectCards = (id: string) => {
+  return (state: RootState) =>
+    state.persistedReducer.cards.filter((card) => card.listId === id);
+};
 
 export const {
   addCard,

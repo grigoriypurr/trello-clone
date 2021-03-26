@@ -1,23 +1,18 @@
 import React, { useState } from 'react';
 import { StyledPopup, StyledCloseButton, Input } from './styled';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../redux/store';
+import { useDispatch } from 'react-redux';
 import { getUserName } from '../../redux/userSlice';
 
 interface PropsType {
   setUserName: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const LoginForm = (props: PropsType) => {
-  const { setUserName } = props;
-
-  const userName = useSelector(
-    (state: RootState) => state.persistedReducer.user
-  );
+const LoginForm: React.FC<PropsType> = ({ setUserName }) => {
   const [open, setOpen] = useState(true);
   const [loginValue, setLoginValue] = useState('');
 
   const dispatch = useDispatch();
+
   const closeModal = () => {
     if (!loginValue) return;
     setUserName(loginValue);

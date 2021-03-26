@@ -29,31 +29,27 @@ interface PropsType {
   listId: string;
   commentsAmount: CommentsType[];
   closeModal: () => void;
-  onCommentChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   setCardTitleValue: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const CardsContent = (props: PropsType) => {
-  const {
-    open,
-    description,
-    cardTitle,
-    userName,
-    listTitle,
-    cardId,
-    listId,
-    commentsAmount,
-    closeModal,
-    onCommentChange,
-    setCardTitleValue,
-  } = props;
-
-  const dispatch = useDispatch();
-
+const CardsContent: React.FC<PropsType> = ({
+  open,
+  description,
+  cardTitle,
+  userName,
+  listTitle,
+  cardId,
+  listId,
+  commentsAmount,
+  closeModal,
+  setCardTitleValue,
+}) => {
   const [cardsTitleEditMode, setCardsTitleEditMode] = useState(false);
   const [modalCardTitleValue, setModalCardTitleValue] = useState(cardTitle);
   const [descriptionEditMode, setDescriptionEditMode] = useState(false);
   const [descriptionValue, setDescriptionValue] = useState(description);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setModalCardTitleValue(cardTitle);
@@ -159,7 +155,6 @@ const CardsContent = (props: PropsType) => {
           cardId={cardId}
           commentsAmount={commentsAmount}
           userName={userName}
-          onCommentChange={(e) => onCommentChange(e)}
         />
         <StyledButton
           type="button"

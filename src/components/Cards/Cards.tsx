@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { StyledCards, StyledTextarea, StyledButton } from './styled';
 import CardsContent from '../CardsContent';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
 import { deleteCard, updateCardName } from '../../redux/cardsSlice';
+import { selectComments } from '../../redux/commentsSlice';
 
 interface PropsType {
   isEditMode: boolean;
@@ -15,28 +15,21 @@ interface PropsType {
   description: string;
 }
 
-const Cards = (props: PropsType) => {
-  const {
-    isEditMode,
-    cardTitle,
-    cardId,
-    listId,
-    userName,
-    listTitle,
-    description,
-  } = props;
-  const dispatch = useDispatch();
-  const comments = useSelector(
-    (state: RootState) => state.persistedReducer.comments
-  );
-  const filteredComments = comments.filter(
-    (comment) => comment.cardId === cardId
-  );
-
+const Cards: React.FC<PropsType> = ({
+  isEditMode,
+  cardTitle,
+  cardId,
+  listId,
+  userName,
+  listTitle,
+  description,
+}) => {
   const [editMode, setEditMode] = useState(isEditMode);
   const [cardTitleValue, setCardTitleValue] = useState(cardTitle);
-  const [commentValue, setCommentValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+
+  const filteredComments = useSelector(selectComments(cardId));
+  const dispatch = useDispatch();
 
   const closeModal = () => setIsOpen(false);
 
@@ -52,9 +45,6 @@ const Cards = (props: PropsType) => {
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
     setCardTitleValue(e.currentTarget.value);
-  };
-  const onCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setCommentValue(e.currentTarget.value);
   };
 
   return (
@@ -91,7 +81,6 @@ const Cards = (props: PropsType) => {
         listTitle={listTitle}
         description={description}
         closeModal={closeModal}
-        onCommentChange={(event) => onCommentChange(event)}
         setCardTitleValue={setCardTitleValue}
       />
     </>

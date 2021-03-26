@@ -8,11 +8,15 @@ interface PropsType {
   commentId: string;
 }
 
-const Comment = (props: PropsType) => {
-  const { userName, commentValue, commentId } = props;
-  const dispatch = useDispatch();
+const Comment: React.FC<PropsType> = ({
+  userName,
+  commentValue,
+  commentId,
+}) => {
   const [editMode, setEditMode] = useState(false);
   const [inputValue, setInputValue] = useState(commentValue);
+
+  const dispatch = useDispatch();
 
   const activateEditMode = () => {
     setEditMode(true);
