@@ -7,6 +7,7 @@ export const StyledTables = styled.div`
   overflow-x: auto;
 `;
 export const FlexBox = styled.div`
+  padding: 10px;
   display: flex;
   justify-content: ${(props: { justifyContent?: string }) =>
     props.justifyContent};

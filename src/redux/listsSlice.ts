@@ -46,49 +46,35 @@ export const listsSlice = createSlice({
       state,
       action: PayloadAction<{ listId: string; value: string; }>
     ) => {
-      return state.map((item) => {
-        if (item.id === action.payload.listId) {
-          return { ...item, listName: action.payload.value, isEditMode: false };
-        } else {
-          return item;
-        }
-      });
-    },
+      const list = state.find((item) => item.id === action.payload.listId);
+      if (list) {
+        list.listName = action.payload.value;
+        list.isEditMode = false;
+      }
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(addCard, (state, action: PayloadAction<CardsType>) => {
-      return state.map((item) => {
-        if (item.id === action.payload.listId) {
-          return { ...item, cardsIds: [...item.cardsIds, action.payload.id] };
-        } else {
-          return item;
-        }
-      });
+      const list = state.find((item) => item.id === action.payload.listId);
+      if (list) {
+        list.cardsIds.push(action.payload.id);
+      }
     });
     builder.addCase(
       deleteCard,
       (state, action: PayloadAction<{ listId: string; cardId: string; }>) => {
-        return state.map((list) => {
-          if (list.id === action.payload.listId) {
-            return {
-              ...list,
-              cardsIds: [
-                ...list.cardsIds.filter((card) => card !== action.payload.cardId),
-              ],
-            };
-          } else {
-            return list;
-          }
-        });
-      }
-    );
+        const list = state.find((list) => list.id === action.payload.listId);
+        if (list) {
+          list.cardsIds = list.cardsIds.filter((card) => card !== action.payload.cardId);
+        }
+      });
     builder.addCase(deleteList, (state, action: PayloadAction<string>) => {
       return state.filter((item) => item.id !== action.payload);
     });
   },
 });
 
-export const selectLists = (state: RootState) => state.persistedReducer.lists;
+export const selectLists = (state: RootState) => state.lists;
 
 export const { addList, updateListNameInState } = listsSlice.actions;
 

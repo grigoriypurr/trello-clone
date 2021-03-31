@@ -31,19 +31,16 @@ export const commentsSlice = createSlice({
       });
     },
     deleteComment: (state, action: PayloadAction<string>) => {
-      return state.filter((item) =>  item.id !== action.payload);
+      return state.filter((item) => item.id !== action.payload);
     },
     updateComment: (
       state,
       action: PayloadAction<{ commentId: string; value: string; }>
     ) => {
-      return state.map((item) => {
-        if (item.id === action.payload.commentId) {
-          return { ...item, description: action.payload.value };
-        } else {
-          return item;
-        }
-      });
+      const comment = state.find((item) => item.id === action.payload.commentId);
+      if (comment) {
+        comment.description = action.payload.value;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -61,7 +58,7 @@ export const commentsSlice = createSlice({
 
 export const selectCommentsByCardId = (CardId: string) => {
   return (state: RootState) =>
-    state.persistedReducer.comments.filter((comment) => comment.cardId === CardId);
+    state.comments.filter((comment) => comment.cardId === CardId);
 };
 
 export const {

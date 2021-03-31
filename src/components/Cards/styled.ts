@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 
 export const StyledCards = styled.div`
+  padding: 0px 8px 0px 3px;
+  border-radius: 3px;
   position: relative;
   background-color: white;
   display: flex;
-  margin: 2px;
+  margin-top: 3px;
+  margin-bottom: 3px;
   flex-direction: column;
   white-space: normal;
   word-break: break-all;
