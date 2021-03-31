@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Comment from '../Comment';
 import { addComment, CommentsType } from '../../redux/commentsSlice';
 import { useDispatch } from 'react-redux';
+
 interface PropsType {
   listId: string;
   userName: string;
@@ -17,7 +18,7 @@ const CardsComments: React.FC<PropsType> = ({
   commentsAmount,
 }) => {
   const [newCommentEditMode, setEditMode] = useState(false);
-  const [inputValue, setInputvalue] = useState('');
+  const [inputValue, setInputValue] = useState('');
 
   const dispatch = useDispatch();
 
@@ -27,10 +28,10 @@ const CardsComments: React.FC<PropsType> = ({
   const handleClick = () => {
     setEditMode(false);
     dispatch(addComment({ cardId, listId, commentValue: inputValue }));
-    setInputvalue('');
+    setInputValue('');
   };
   const onInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputvalue(event.currentTarget.value);
+    setInputValue(event.currentTarget.value);
   };
 
   return (

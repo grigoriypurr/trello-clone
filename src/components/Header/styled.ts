@@ -22,7 +22,7 @@ export const Input = styled.input.attrs((props: InputProps) => ({
   }
 `;
 
-export const Flexbox = styled.div`
+export const FlexBox = styled.div`
   background-color: #74f0f0;
   overflow: hidden;
   display: flex;

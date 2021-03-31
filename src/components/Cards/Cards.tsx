@@ -3,7 +3,7 @@ import { StyledCards, StyledTextarea, StyledButton } from './styled';
 import CardsContent from '../CardsContent';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteCard, updateCardName } from '../../redux/cardsSlice';
-import { selectComments } from '../../redux/commentsSlice';
+import { selectCommentsByCardId } from '../../redux/commentsSlice';
 
 interface PropsType {
   isEditMode: boolean;
@@ -28,7 +28,7 @@ const Cards: React.FC<PropsType> = ({
   const [cardTitleValue, setCardTitleValue] = useState(cardTitle);
   const [isOpen, setIsOpen] = useState(false);
 
-  const filteredComments = useSelector(selectComments(cardId));
+  const commentsByCard = useSelector(selectCommentsByCardId(cardId));
   const dispatch = useDispatch();
 
   const closeModal = () => setIsOpen(false);
@@ -37,9 +37,10 @@ const Cards: React.FC<PropsType> = ({
     if (!cardTitleValue) {
       dispatch(deleteCard({ listId, cardId }));
       return;
+    } else {
+      dispatch(updateCardName({ cardId, value: cardTitleValue }));
+      setEditMode(false);
     }
-    dispatch(updateCardName({ cardId, value: cardTitleValue }));
-    setEditMode(false);
   };
   const onTextareaChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -66,8 +67,8 @@ const Cards: React.FC<PropsType> = ({
           >
             &#215;
           </StyledButton>
-          {!!filteredComments.length && (
-            <div>{filteredComments.length} comments</div>
+          {!!commentsByCard.length && (
+            <div>{commentsByCard.length} comments</div>
           )}
         </StyledCards>
       )}
@@ -75,9 +76,9 @@ const Cards: React.FC<PropsType> = ({
         open={isOpen}
         cardId={cardId}
         listId={listId}
-        cardTitle={cardTitle}
+        cardTitle={cardTitleValue}
         userName={userName}
-        commentsAmount={filteredComments}
+        commentsAmount={commentsByCard}
         listTitle={listTitle}
         description={description}
         closeModal={closeModal}

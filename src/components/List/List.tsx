@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   StyledList,
-  Flexbox,
+  FlexBox,
   Input,
   StyledListTitle,
   StyledButton,
@@ -9,8 +9,9 @@ import {
 import Cards from '../Cards';
 import { updateListNameInState } from '../../redux/listsSlice';
 import { deleteList } from '../../redux/commonActions';
-import { addCard, selectCards } from '../../redux/cardsSlice';
+import { addCard, selectCardsByListId } from '../../redux/cardsSlice';
 import { useDispatch, useSelector } from 'react-redux';
+
 interface PropsType {
   editMode: boolean;
   id: string;
@@ -23,7 +24,7 @@ const List: React.FC<PropsType> = ({ editMode, id, listName, userName }) => {
   const [isEditMode, setEditMode] = useState(editMode);
   const [inputListName, setInputListName] = useState(listName);
 
-  const filteredListsCards = useSelector(selectCards(id));
+  const filteredListsCards = useSelector(selectCardsByListId(id));
   const dispatch = useDispatch();
 
   const inputActivateEditMode = () => {
@@ -33,10 +34,10 @@ const List: React.FC<PropsType> = ({ editMode, id, listName, userName }) => {
     if (!inputListName) {
       dispatch(deleteList(id));
       return;
+    } else {
+      dispatch(updateListNameInState({ listId: id, value: inputListName }));
+      setEditMode(false);
     }
-    dispatch(updateListNameInState({ listId: id, value: inputListName }));
-
-    setEditMode(false);
   };
   const onInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputListName(e.currentTarget.value);
@@ -48,7 +49,7 @@ const List: React.FC<PropsType> = ({ editMode, id, listName, userName }) => {
   return (
     <StyledList>
       {!isEditMode ? (
-        <Flexbox justifyContent="space-between">
+        <FlexBox justifyContent="space-between">
           <StyledListTitle onClick={inputActivateEditMode}>
             {inputListName}
           </StyledListTitle>
@@ -59,7 +60,7 @@ const List: React.FC<PropsType> = ({ editMode, id, listName, userName }) => {
           >
             &#215;
           </StyledButton>
-        </Flexbox>
+        </FlexBox>
       ) : (
         <Input
           value={inputListName}
@@ -80,9 +81,9 @@ const List: React.FC<PropsType> = ({ editMode, id, listName, userName }) => {
           description={item.description}
         />
       ))}
-      <Flexbox justifyContent="space-between">
+      <FlexBox justifyContent="space-between">
         <button onClick={handleClick}>Add Card</button>
-      </Flexbox>
+      </FlexBox>
     </StyledList>
   );
 };

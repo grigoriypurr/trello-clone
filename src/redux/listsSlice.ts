@@ -44,7 +44,7 @@ export const listsSlice = createSlice({
     },
     updateListNameInState: (
       state,
-      action: PayloadAction<{ listId: string; value: string }>
+      action: PayloadAction<{ listId: string; value: string; }>
     ) => {
       return state.map((item) => {
         if (item.id === action.payload.listId) {
@@ -60,23 +60,25 @@ export const listsSlice = createSlice({
       return state.map((item) => {
         if (item.id === action.payload.listId) {
           return { ...item, cardsIds: [...item.cardsIds, action.payload.id] };
-        } else return item;
+        } else {
+          return item;
+        }
       });
     });
     builder.addCase(
       deleteCard,
-      (state, action: PayloadAction<{ listId: string; cardId: string }>) => {
+      (state, action: PayloadAction<{ listId: string; cardId: string; }>) => {
         return state.map((list) => {
           if (list.id === action.payload.listId) {
             return {
               ...list,
               cardsIds: [
-                ...list.cardsIds.filter(
-                  (card) => card !== action.payload.cardId
-                ),
+                ...list.cardsIds.filter((card) => card !== action.payload.cardId),
               ],
             };
-          } else return list;
+          } else {
+            return list;
+          }
         });
       }
     );

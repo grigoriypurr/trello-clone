@@ -10,8 +10,6 @@ export const StyledPopup = styled(Popup)`
     position: relative;
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
-    /* justify-content: center; */
     min-height: 50vh;
     min-width: 30vw;
     max-width: 30vw;
@@ -23,7 +21,7 @@ export const StyledPopup = styled(Popup)`
     overflow-y: auto; 
   }
 `;
-export const Flexbox = styled.div`
+export const FlexBox = styled.div`
   align-items: flex-start;
   display: flex;
   justify-content: ${(props: { justifyContent?: string }) =>

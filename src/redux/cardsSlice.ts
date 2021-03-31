@@ -34,16 +34,14 @@ export const cardsSlice = createSlice({
     },
     deleteCard: (
       state,
-      action: PayloadAction<{ listId: string; cardId: string }>
+      action: PayloadAction<{ listId: string; cardId: string; }>
     ) => {
-      return state.filter((card) => {
-        return card.id !== action.payload.cardId;
-      });
+      return state.filter((card) => card.id !== action.payload.cardId);
     },
     updateCardName: (
       state,
-      action: PayloadAction<{ cardId: string; value: string }>
-    ) => {
+      action: PayloadAction<{ cardId: string; value: string; }>
+    ) => { 
       return state.map((item) => {
         if (item.id === action.payload.cardId) {
           return {
@@ -58,7 +56,7 @@ export const cardsSlice = createSlice({
     },
     updateDescriptionInCard: (
       state,
-      action: PayloadAction<{ cardId: string; value: string }>
+      action: PayloadAction<{ cardId: string; value: string; }>
     ) => {
       return state.map((card) => {
         if (card.id === action.payload.cardId) {
@@ -75,9 +73,9 @@ export const cardsSlice = createSlice({
     });
   },
 });
-export const selectCards = (id: string) => {
+export const selectCardsByListId = (ListId: string) => {
   return (state: RootState) =>
-    state.persistedReducer.cards.filter((card) => card.listId === id);
+    state.persistedReducer.cards.filter((card) => card.listId === ListId);
 };
 
 export const {

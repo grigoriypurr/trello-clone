@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { StyledPopup, StyledCloseButton, Input } from './styled';
 import { useDispatch } from 'react-redux';
-import { getUserName } from '../../redux/userSlice';
+import { setUserName } from '../../redux/userSlice';
 
 interface PropsType {
-  setUserName: React.Dispatch<React.SetStateAction<string>>;
+  setUser: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const LoginForm: React.FC<PropsType> = ({ setUserName }) => {
+const LoginForm: React.FC<PropsType> = ({ setUser }) => {
   const [open, setOpen] = useState(true);
   const [loginValue, setLoginValue] = useState('');
 
@@ -15,9 +15,9 @@ const LoginForm: React.FC<PropsType> = ({ setUserName }) => {
 
   const closeModal = () => {
     if (!loginValue) return;
-    setUserName(loginValue);
-    dispatch(getUserName(loginValue));
-    setOpen(false);
+      setUser(loginValue);
+      dispatch(setUserName(loginValue));
+      setOpen(false);
   };
   const onLoginValueChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setLoginValue(e.currentTarget.value);

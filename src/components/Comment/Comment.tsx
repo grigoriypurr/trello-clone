@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { deleteComment, updateComment } from '../../redux/commentsSlice';
 import { StyledComment, StyledDiv, Input, StyledButton } from './styled';
 import { useDispatch } from 'react-redux';
+
 interface PropsType {
   userName: string;
   commentValue: string;

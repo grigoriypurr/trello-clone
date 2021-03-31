@@ -1,7 +1,8 @@
 import List from '../List';
-import { StyledTables, Flexbox, StyledButton } from './styled';
+import { StyledTables, FlexBox, StyledButton } from './styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { addList, selectLists } from '../../redux/listsSlice';
+
 interface PropsType {
   userName: string;
 }
@@ -12,7 +13,7 @@ const Board: React.FC<PropsType> = ({ userName }) => {
 
   return (
     <StyledTables>
-      <Flexbox>
+      <FlexBox>
         {lists.map((item) => (
           <List
             key={item.id}
@@ -32,7 +33,7 @@ const Board: React.FC<PropsType> = ({ userName }) => {
             + Add another list
           </button>
         </StyledButton>
-      </Flexbox>
+      </FlexBox>
     </StyledTables>
   );
 };

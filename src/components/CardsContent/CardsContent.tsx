@@ -5,7 +5,7 @@ import {
   StyledButton,
   Input,
   StyledCardTitle,
-  Flexbox,
+  FlexBox,
   StyledDescription,
   StyledSpan,
   StyledSpanWithUnderline,
@@ -106,7 +106,7 @@ const CardsContent: React.FC<PropsType> = ({
           </StyledCardTitle>
         )}
         <div>
-          <Flexbox justifyContent="flex-start">
+          <FlexBox justifyContent="flex-start">
             <h4>Description:</h4>
             {(descriptionValue || descriptionEditMode) && (
               <StyledButton
@@ -119,7 +119,7 @@ const CardsContent: React.FC<PropsType> = ({
                 Edit
               </StyledButton>
             )}
-          </Flexbox>
+          </FlexBox>
           {descriptionEditMode ? (
             <Input
               value={descriptionValue}

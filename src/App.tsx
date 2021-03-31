@@ -5,13 +5,13 @@ import { StyledApp } from './styled';
 import { useState } from 'react';
 
 const App = () => {
-  const [userName, setUserName] = useState('');
+  const [user, setUser] = useState('');
 
   return (
     <StyledApp>
-      <LoginForm setUserName={setUserName} />
+      <LoginForm setUser={setUser} />
       <Header />
-      <Board userName={userName} />
+      <Board userName={user} />
     </StyledApp>
   );
 };

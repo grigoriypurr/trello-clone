@@ -31,13 +31,11 @@ export const commentsSlice = createSlice({
       });
     },
     deleteComment: (state, action: PayloadAction<string>) => {
-      return state.filter((item) => {
-        return item.id !== action.payload;
-      });
+      return state.filter((item) =>  item.id !== action.payload);
     },
     updateComment: (
       state,
-      action: PayloadAction<{ commentId: string; value: string }>
+      action: PayloadAction<{ commentId: string; value: string; }>
     ) => {
       return state.map((item) => {
         if (item.id === action.payload.commentId) {
@@ -50,24 +48,20 @@ export const commentsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(deleteList, (state, action: PayloadAction<string>) => {
-      return state.filter((item) => {
-        return item.listId !== action.payload;
-      });
+      return state.filter((item) => item.listId !== action.payload);
     });
     builder.addCase(
       deleteCard,
-      (state, action: PayloadAction<{ listId: string; cardId: string }>) => {
-        return state.filter((item) => {
-          return item.cardId !== action.payload.cardId;
-        });
+      (state, action: PayloadAction<{ listId: string; cardId: string; }>) => {
+        return state.filter((item) => item.cardId !== action.payload.cardId);
       }
     );
   },
 });
 
-export const selectComments = (id: string) => {
+export const selectCommentsByCardId = (CardId: string) => {
   return (state: RootState) =>
-    state.persistedReducer.comments.filter((comment) => comment.cardId === id);
+    state.persistedReducer.comments.filter((comment) => comment.cardId === CardId);
 };
 
 export const {

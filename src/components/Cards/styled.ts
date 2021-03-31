@@ -5,7 +5,6 @@ export const StyledCards = styled.div`
   background-color: white;
   display: flex;
   margin: 2px;
-  /* flex-grow: 0; */
   flex-direction: column;
   white-space: normal;
   word-break: break-all;

@@ -1,4 +1,4 @@
-import { Button, Flexbox, Input, ClearButton } from './styled';
+import { Button, FlexBox, Input, ClearButton } from './styled';
 
 const Header = () => {
   const clearLocalStorage = () => {
@@ -6,11 +6,11 @@ const Header = () => {
   };
 
   return (
-    <Flexbox justifyContent="space-between">
-      <Flexbox>
+    <FlexBox justifyContent="space-between">
+      <FlexBox>
         <Button> &#8962;</Button>
         <Input />
-      </Flexbox>
+      </FlexBox>
       <div>Trello </div>
       <div>
         <ClearButton onClick={clearLocalStorage}>
@@ -20,7 +20,7 @@ const Header = () => {
         <Button>&#9432;</Button>
         <Button>&#128276;</Button>
       </div>
-    </Flexbox>
+    </FlexBox>
   );
 };
 

@@ -4,16 +4,14 @@ export const StyledList = styled.div`
   background-color: lightgray;
   display: flex;
   margin: 10px 10px 10px 0px;
-  /* flex-grow: 0; */
   flex-direction: column;
 `;
-export const Flexbox = styled.div`
+export const FlexBox = styled.div`
   position:relative;
   display: flex;
   flex-direction: flex-start;
   justify-content: ${(props: { justifyContent?: string }) =>
     props.justifyContent};
-  /* flex-shrink: 0; */
 `;
 
 export const Input = styled.textarea`
